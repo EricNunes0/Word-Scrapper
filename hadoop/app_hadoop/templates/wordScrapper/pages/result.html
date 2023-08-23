@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Scrapper</title>
+    <link rel = "icon" href = "{% static 'svgs/icon.svg' %}"/>
+    <link rel = "stylesheet" href = "{% static 'styles/result.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body id = "ws-home">
+    <div id = "ws-main">
+        <div class = "hidden" id = "ws-original-container">
+            <div class = "hidden" id = "ws-original-area">
+                <div id = "ws-original-title-div">
+                    <h1 id = "ws-original-title">Texto original</h1>
+                </div>
+                <div id = "ws-original-text-div">
+                    <p id = "ws-original-text"></p>
+                    <script>
+                        var jsonOriginal = JSON.parse('{{textInput|escapejs}}');
+                        const wsOriginalText = document.querySelector("#ws-original-text");
+                        wsOriginalText.innerHTML = jsonOriginal;
+                    </script>
+                </div>
+                <div id = "ws-original-buttons-div">
+                    <div id = "ws-open-results-div">
+                        <button type = "button" id = "ws-open-results-button">
+                            Ver resultados
+                        </button>
+                    </div>
+                    <div id = "ws-return-div">
+                        <a id = "ws-return-link" href = "/wordscrapper">
+                            <button type = "button" id = "ws-return-button">
+                                Novo texto
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "" id = "ws-results-container">
+            <div id = "ws-results-area">
+                <div id = "ws-results-title-div">
+                    <h1 id = "ws-results-title">Resultados</h1>
+                </div>
+                <div id = "ws-results">
+                    <script>
+                        var jsonResults = JSON.parse('{{results|escapejs}}');
+                        const wsResults = document.querySelector("#ws-results");
+                        let out = "";
+                        jsonResults.forEach((result) => {
+                            out += `
+                                <div class = "ws-result-divs">
+                                    <button class = "ws-result-buttons" onclick = "filterText({text: '${result[0]}'})">
+                                        <div class = "ws-result-word-divs">
+                                            <p class = "ws-result-words">${result[0]}</p>
+                                        </div>
+                                        <div class = "ws-result-map-divs">
+                                            <p class = "ws-result-map">${result[1]}</p>
+                                        </div>
+                                    </button>
+                                </div>
+                            `;
+                        });
+                        wsResults.innerHTML = out;
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type = "text/javascript" src = "{% static 'scripts/filterText.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'scripts/resultsBar.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>
