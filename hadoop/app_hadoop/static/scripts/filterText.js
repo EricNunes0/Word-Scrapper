@@ -9,7 +9,7 @@ function filterText({text}) {
         });
         let newWords = [];
         for(let word of words) {
-            if(word.includes(text)) {
+            if(word.toLowerCase().includes(text.toLowerCase())) {
                 newWords.push(`<span class = "highlights">${word}</span>`);
             } else {
                 newWords.push(word);

@@ -7,6 +7,14 @@
     padding: 0;
 }
 
+img, svg {
+    -webkit-user-drag: none;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
 textarea {
     resize: none;
 }
@@ -41,6 +49,96 @@ textarea {
     align-items: center;
 }
 
+/* Sessão do título */
+#ws-header-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+/* Título */
+#ws-title {
+    margin: 0;
+}
+
+/* Ícone do título */
+#ws-title-icon {
+    width: 50px;
+    height: 50px;
+}
+
+/* Div dos inputs */
+#ws-input-div {
+    background-color: #d0d0d0;
+    padding: 0.5rem;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
+}
+
+/* Div dos botões de opções de input */
+#ws-input-option-buttons-div {
+    background-color: #bbb;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Divs de cada botão de opções de input */
+/*.ws-input-option-button-divs {
+    background-color: #f02020;
+    padding: 5px;
+}*/
+
+/* Botões de opções de input */
+.option-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #888;
+    border-radius: 2px;
+    padding: 2px 10px;
+    transition: all 0.3s;
+}
+.option-buttons:hover {
+    filter: brightness(0.9);
+}
+.option-buttons[class~="selected"] {
+    background-color: #a0a0a0;
+}
+.option-buttons[class~="selected"]:hover {
+    cursor: not-allowed;
+    filter: unset;
+}
+
+/* Divs dos ícones dos botões de opções de input */
+.option-button-icon-divs {
+    display: flex;
+    justify-content: center;
+}
+
+/* Ícones dos botões de opções de input */
+.option-button-icons {
+    width: 20px;
+    height: 20px;
+}
+
+/* Texto dos botões de opções de input */
+.option-button-texts {
+    margin: 0;
+}
+
+/* Áreas dos inputs */
+.ws-inputs-areas[class~="closed"] {
+    display: none;
+}
+
 /* Input de texto */
 #text-input {
     resize: none;
@@ -57,6 +155,20 @@ textarea {
 }
 #text-input:focus {
     outline: 1px solid var(--submit-color);
+}
+
+/* Inputs de texto */
+input[type="text"] {
+    resize: none;
+    width: 300px;
+    border: unset;
+    border-radius: 3px;
+    padding: 5px;
+    outline: 1px solid #000;
+    transition: all 0.3s;
+}
+input[type="text"]:focus {
+    outline: 1px solid #2090d0;
 }
 
 /* Div da mensagem de aviso */
@@ -80,17 +192,25 @@ textarea {
     margin-top: 1rem;
 }
 
-/* Botão de submit */
-#submit-button {
+/* Divs dos botões de submit */
+.submit-button-divs[class~="closed"] {
+    display: none;
+}
+
+/* Botões de submit */
+.submit-buttons {
     background-image: linear-gradient(0deg, var(--submit-color), transparent);
     background-size: 500% 500%;
     color: var(--submit-color);
-    width: 100px;
+    width: 120px;
     height: 40px;
     border: 2px solid var(--submit-color);
+    border-radius: 25px;
+    font-size: 14pt;
     transition: all 0.3s;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px;
 }
-#submit-button:hover {
+.submit-buttons:hover {
     transform: scale(1.05);
     background-position: 100% 100%;
     color: #fff;
