@@ -1,6 +1,6 @@
 const optionButtons = document.querySelectorAll(".option-buttons");
 const inputAreas = document.querySelectorAll(".ws-inputs-areas");
-const inputs = document.querySelectorAll(".inputs");
+const inputs = document.querySelectorAll(".text-inputs");
 const submitButtonsDivs = document.querySelectorAll(".submit-button-divs");
 
 for(const optionButton of optionButtons) {

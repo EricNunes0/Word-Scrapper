@@ -5,6 +5,7 @@ from io import BytesIO
 from .functions.urlget import GetURLText
 from .functions.main import WordAmount
 import json
+import numpy
 
 def index(request):
     if request.method == "GET":
@@ -12,7 +13,9 @@ def index(request):
     elif request.method == "POST":
         inputType = request.POST.get("type")
         textInput = request.POST.get(f"{inputType}-input")
+        checkboxes = request.POST.getlist("checkboxes")
         print("『🔴』Tipo de input:", inputType, "『🔵』Texto para converter:", textInput)
+        print("『📦』Checkboxes:", checkboxes)
 
         if inputType == "url":
             textInput = GetURLText().get(textInput)
@@ -27,19 +30,31 @@ def index(request):
         wordCount = 0
         wordRepeat = 0
         wordBiggest = ""
+        wordMostRepeat = {
+            "word": "",
+            "length": 0
+        }
         with mr_job.make_runner() as runner:
             runner.run()
             for key, value in mr_job.parse_output(runner.cat_output()):
+                if "removeNumbers" in checkboxes:
+                    if key.isnumeric():
+                        print(key, "é um número")
+                        continue
                 results.append([key, value])
                 wordCount = wordCount + 1
                 if value >= 2:
                     wordRepeat = wordRepeat + 1
                 if len(key) >= len(wordBiggest):
                     wordBiggest = key
+                if value > wordMostRepeat["length"]:
+                    wordMostRepeat["word"] = key
+                    wordMostRepeat["length"] = value
         #return HttpResponse()
         json_input = json.dumps(textInput)
         json_string = json.dumps(results)
         json_wordCount = json.dumps(wordCount)
         json_wordRepeat = json.dumps(wordRepeat)
         json_wordBiggest = json.dumps(wordBiggest)
-        return render(request, 'wordScrapper/pages/index.html', {'textInput': json_input, 'results': json_string, 'wordCount': json_wordCount, 'wordRepeat': json_wordRepeat, 'wordBiggest': json_wordBiggest})
+        json_wordMostRepeated = json.dumps(wordMostRepeat)
+        return render(request, 'wordScrapper/pages/index.html', {'textInput': json_input, 'results': json_string, 'wordCount': json_wordCount, 'wordRepeat': json_wordRepeat, 'wordBiggest': json_wordBiggest, 'wordMostRepeated': json_wordMostRepeated})

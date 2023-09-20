@@ -11,6 +11,7 @@ function leftCardAnimation({oldCard, newCard}) {
         wsAreaNew.classList.remove("closed");
         wsAreaNew.classList.add("opening");
         document.querySelector("#ws-home").className = newCard;
+        changePageIcon({type: newCard});
         setTimeout(function() {
             wsAreaNew.classList.remove("opening");
         }, cardAnimationDuration * 1000);
@@ -26,6 +27,7 @@ function rightCardAnimation({oldCard, newCard}) {
         wsAreaNew.classList.remove("closed");
         wsAreaNew.classList.add("opening");
         document.querySelector("#ws-home").className = newCard;
+        changePageIcon({type: newCard});
         setTimeout(function() {
             wsAreaNew.classList.remove("opening");
         }, cardAnimationDuration * 1000);

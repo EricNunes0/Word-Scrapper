@@ -5,9 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Scrapper</title>
-    <link rel = "icon" href = "{% static 'images/logo.png' %}"/>
+    <link rel = "icon" id = "ws-head-icon" href = "{% static 'images/logo(0).png' %}"/>
     <link rel = "stylesheet" href = "{% static 'styles/index.css' %}"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script type = "text/javascript" src = "{% static 'scripts/getScrap.js' %}"></script>
 </head>
 <body id = "ws-home">
     <script type = "text/javascript">
@@ -17,6 +18,8 @@
             var jsonWordCount = JSON.parse('{{wordCount|escapejs}}');
             var jsonWordRepeat = JSON.parse('{{wordRepeat|escapejs}}');
             var jsonWordBiggest = JSON.parse('{{wordBiggest|escapejs}}');
+            var jsonWordMostRepeated = JSON.parse('{{wordMostRepeated|escapejs}}');
+            var jsonResults = JSON.parse('{{results|escapejs}}');
         };
     </script>
     <div id = "ws-main">
@@ -28,7 +31,7 @@
                         <section class = "ws-header-sections" id = "index">
                         </section>
                         <div id = "ws-title-icon-div">
-                            <img src = "{% static 'images/logo.png' %}" id = "ws-title-icon"></img>
+                            <img src = "{% static 'images/logo(0).png' %}" id = "ws-title-icon"></img>
                         </div>
                         <div id = "ws-title-div">
                             <h1 id = "ws-title">Word Scrapper</h1>
@@ -56,13 +59,23 @@
                                         </div>
                                     </button>
                                 </div>
+                                <div class = "ws-input-option-button-divs">
+                                    <button type = "button" class = "option-buttons" id = "music">
+                                        <div class = "option-button-icon-divs">
+                                            <img class = "option-button-icons" src = "{% static 'svgs/img_music.svg' %}"></img>
+                                        </div>
+                                        <div class = "option-button-text-divs">
+                                            <p class = "option-button-texts">Música</p>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                             <div class = "ws-inputs-areas" id = "text-area">
                                 <div class = "ws-input-label-divs">
                                     <label for = "text-input" class="input-labels" id = "text-input-label">Texto:</label>
                                 </div>
                                 <div class = "ws-input-divs">
-                                    <textarea name = "text-input" class = "inputs" id = "text-input"></textarea>
+                                    <textarea name = "text-input" class = "text-inputs" id = "text-input"></textarea>
                                     <span id = "letter-counter"></span>
                                 </div>
                             </div>
@@ -71,14 +84,22 @@
                                     <label for = "text-input" class="input-labels" id = "url-input-label">URL:</label>
                                 </div>
                                 <div class = "ws-input-divs">
-                                    <input type = "text" name = "url-input" class = "inputs" id = "url-input" placeholder = "https://"/>
+                                    <input type = "text" name = "url-input" class = "text-inputs" id = "url-input" placeholder = "https://"/>
+                                </div>
+                            </div>
+                            <div class = "ws-inputs-areas closed" id = "music-area">
+                                <div class = "ws-input-label-divs">
+                                    <label for = "text-input" class="input-labels" id = "music-input-label">Nome da música:</label>
+                                </div>
+                                <div class = "ws-input-divs">
+                                    <input type = "text" name = "music-input" class = "text-inputs" id = "music-input" placeholder = "Música"/>
                                 </div>
                             </div>
                         </div>
                         <section id = "ws-checkbox-section">
                             <div class = "ws-checkbox-divs">
                                 <div class = "ws-checkbox-decoration-divs">
-                                    <input type = "checkbox" id = "cb-1" name = "meta"></input>
+                                    <input type = "checkbox" id = "cb-1" name = "checkboxes" value = "removeNumbers"></input>
                                     <span class = "ws-checkbox-decoration"></span>
                                 </div>
                                 <label for = "cb-1" class = "ws-checkbox-labels">Remover números</label>
@@ -91,8 +112,14 @@
                             <div class = "submit-button-divs closed" id = "url-submit-div">
                                 <button type = "submit" class = "ws-index-buttons submit-buttons" id = "url-submit">Enviar URL</button>
                             </div>
+                            <div class = "submit-button-divs closed" id = "music-submit-div">
+                                <button type = "submit" class = "ws-index-buttons submit-buttons" id = "music-submit">Buscar</button>
+                            </div>
                             <div class = "ws-move-buttons-divs">
-                                <button type = "button" class = "ws-move-buttons" id = "ws-move-index-results" onclick="rightCardAnimation({oldCard: 'index', newCard: 'results'})">Resultados</button>
+                                <button type = "button" class = "ws-move-buttons index" id = "ws-move-index-results" onclick="rightCardAnimation({oldCard: 'index', newCard: 'results'})">
+                                    <span  class = "ws-move-button-spans">Resultados</span>
+                                    <i class = "ws-move-button-icons right index"></i>
+                                </button>
                             </div>
                         </div>
                         <div id = "ws-warning-div">
@@ -122,10 +149,16 @@
                         </section>
                         <section class = "ws-move-buttons-sections">
                             <div class = "ws-move-buttons-divs">
-                                <button type = "button" class = "ws-move-buttons" id = "ws-move-results-index" onclick="leftCardAnimation({oldCard: 'results', newCard: 'index'})">Início</button>
+                                <button type = "button" class = "ws-move-buttons results" id = "ws-move-results-index" onclick="leftCardAnimation({oldCard: 'results', newCard: 'index'})">
+                                    <i class = "ws-move-button-icons left results"></i>
+                                    <span  class = "ws-move-button-spans">Início</span>
+                                </button>
                             </div>
                             <div class = "ws-move-buttons-divs">
-                                <button type = "button" class = "ws-move-buttons" id = "ws-move-results-details" onclick="rightCardAnimation({oldCard: 'results', newCard: 'details'})">Detalhes</button>
+                                <button type = "button" class = "ws-move-buttons results" id = "ws-move-results-details" onclick="rightCardAnimation({oldCard: 'results', newCard: 'details'})">
+                                    <span  class = "ws-move-button-spans">Detalhes</span>
+                                    <i class = "ws-move-button-icons right results"></i>
+                                </button>
                             </div>
                         </section>
                     </div>
@@ -155,10 +188,52 @@
                             <div id = "ws-details-div">
                                 <p class = "ws-details-texts">Maior palavra: <span class = "details" id = "word-biggest-counter">?</span></p>
                             </div>
+                            <div id = "ws-details-div">
+                                <p class = "ws-details-texts">Palavra que mais se repete: <span class = "details" id = "word-most-repeated-counter">?</span></p>
+                            </div>
                         </section>
                         <section class = "ws-move-buttons-sections">
                             <div class = "ws-move-buttons-divs">
-                                <button type = "button" class = "ws-move-buttons" id = "ws-move-details-results" onclick="leftCardAnimation({oldCard: 'details', newCard: 'results'})">Resultados</button>
+                                <button type = "button" class = "ws-move-buttons details" id = "ws-move-details-results" onclick="leftCardAnimation({oldCard: 'details', newCard: 'results'})">
+                                    <i class = "ws-move-button-icons left details"></i>
+                                    <span  class = "ws-move-button-spans">Resultados</span>
+                                </button>
+                            </div>
+                            <div class = "ws-move-buttons-divs">
+                                <button type = "button" class = "ws-move-buttons details" id = "ws-move-details-scrap" onclick="rightCardAnimation({oldCard: 'details', newCard: 'scrap'})">
+                                    <span  class = "ws-move-button-spans">Palavras</span>
+                                    <i class = "ws-move-button-icons right details"></i>
+                                </button>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "ws-areas" id = "ws-area-scrap">
+            <div id = "ws-form-div">
+                <div class = "ws-forms">
+                    {% csrf_token %}
+                    <div class = "ws-form-flex" id = "scrap">
+                        <section class = "ws-header-sections" id = "scrap">
+                        </section>
+                        <div id = "ws-title-icon-div">
+                            <img src = "{% static 'images/logo(3).png' %}" id = "ws-title-icon"></img>
+                        </div>
+                        <div id = "ws-title-div">
+                            <h1 id = "ws-title">Palavras encontradas</h1>
+                        </div>
+                        <section id = "ws-scrap-section">
+                            <div id = "ws-scrap-div">
+
+                            </div>
+                        </section>
+                        <section class = "ws-move-buttons-sections">
+                            <div class = "ws-move-buttons-divs">
+                                <button type = "button" class = "ws-move-buttons scrap" id = "ws-move-scrap-details" onclick="leftCardAnimation({oldCard: 'scrap', newCard: 'details'})">
+                                    <i class = "ws-move-button-icons left scrap"></i>
+                                    <span  class = "ws-move-button-spans">Detalhes</span>
+                                </button>
                             </div>
                         </section>
                     </div>
@@ -167,6 +242,7 @@
         </div>
     </div>
     <script type = "text/javascript" src = "{% static 'scripts/cardAnimation.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'scripts/changePageIcon.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'scripts/formSubmit.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'scripts/getResults.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'scripts/inputType.js' %}"></script>
