@@ -13,6 +13,13 @@ for(const submitButton of submitButtons) {
             warning.innerHTML = "Você precisa inserir um texto!";
             return;
         };
+        if(type === "text") {
+            console.log(textInput.value.length, letterMax)
+            if(textInput.value.length > letterMax) {    
+                warning.innerHTML = `Você atingiu o limite máximo de ${letterMax} caracteres!`;
+                return;
+            };
+        };
         warning.innerHTML = "";
         wsForm.submit();
     });

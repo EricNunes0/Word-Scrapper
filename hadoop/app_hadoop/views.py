@@ -6,11 +6,10 @@ from .functions.urlget import GetURLText
 from .functions.main import WordAmount
 import json
 
-def wordScrapper(request):
-    return render(request, 'wordScrapper/pages/index.html')
-
-def wordScrapperResult(request):
-    if request.method == "POST":
+def index(request):
+    if request.method == "GET":
+        return render(request, 'wordScrapper/pages/index.html')
+    elif request.method == "POST":
         inputType = request.POST.get("type")
         textInput = request.POST.get(f"{inputType}-input")
         print("『🔴』Tipo de input:", inputType, "『🔵』Texto para converter:", textInput)
@@ -25,13 +24,22 @@ def wordScrapperResult(request):
         mr_job = WordAmount(['--no-conf', '-'])
         mr_job.sandbox(stdin=stdin)
         results = []
+        wordCount = 0
+        wordRepeat = 0
+        wordBiggest = ""
         with mr_job.make_runner() as runner:
             runner.run()
             for key, value in mr_job.parse_output(runner.cat_output()):
-                #print("RODOU TUDO", key, value)
                 results.append([key, value])
+                wordCount = wordCount + 1
+                if value >= 2:
+                    wordRepeat = wordRepeat + 1
+                if len(key) >= len(wordBiggest):
+                    wordBiggest = key
         #return HttpResponse()
         json_input = json.dumps(textInput)
         json_string = json.dumps(results)
-        #print(json_input)
-        return render(request, 'wordScrapper/pages/result.html', {'textInput': json_input, 'results': json_string})
+        json_wordCount = json.dumps(wordCount)
+        json_wordRepeat = json.dumps(wordRepeat)
+        json_wordBiggest = json.dumps(wordBiggest)
+        return render(request, 'wordScrapper/pages/index.html', {'textInput': json_input, 'results': json_string, 'wordCount': json_wordCount, 'wordRepeat': json_wordRepeat, 'wordBiggest': json_wordBiggest})

@@ -3,9 +3,9 @@ from django.urls import path
 from app_hadoop import views
 
 urlpatterns = [
-    path('wordscrapper/', views.wordScrapper, name = "wordscrapper"),
+    path('', views.index, name = "index"),
     
-    path('wordscrapper/result', views.wordScrapperResult, name = "scrap")
+    #path('result', views.index, name = "scrap")
     
     #path('hadoop/', admin.site.urls)
 ]

@@ -1,10 +1,35 @@
 :root {
     --submit-color: #2090d0;
+    --ws-area-color: #202024;
+    --ws-area-width: 320px;
+    --ws-area-height: 580px;
+    --ws-card-color-index-0: #00fff0;
+    --ws-card-color-index-1: #1e22ff;
+    --ws-card-color-results-0: #00ff80;
+    --ws-card-color-results-1: #1ea040;
+    --ws-card-color-details-0: #ff40b0;
+    --ws-card-color-details-1: #7928ca;
+    --ws-card-transition-duration: 0.3s;
+    --ws-checkbox-color: #20b0ff;
+    --ws-checkbox-size: 20px;
+    --ws-letter-counter-normal: #a0a0a0;
+    --ws-letter-counter-warn: #f0b000;
+    --ws-letter-counter-error: #f02020;
+    --ws-index-buttons-color: #4080f0;
+    --ws-results-buttons-color: #00c060;
+    --ws-details-buttons-color: #c040d0;
+    --ws-option-buttons-color: #4080f0;
+    --ws-original-text-text-color: #90ffb0;
+    --ws-text-input-text-color: #90d0ff;
 }
 
 * {
     margin: 0;
     padding: 0;
+}
+
+html, body {
+    overflow-x: hidden;
 }
 
 img, svg {
@@ -20,13 +45,24 @@ textarea {
 }
 
 #ws-home {
-    background-color: rgb(247, 192, 120);
-    background-image: linear-gradient(45deg, #ffa030 0%, #2090d0 100%);
+    background-color: #101010;
+    background-image: url("../images/background.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
+    transition: all 0.3s;
+}
+#ws-home.index {
+    background-image: url("../images/background.png");
+}
+#ws-home.results {
+    background-image: url("../images/background(1).png");
+}
+#ws-home.details {
+    background-image: url("../images/background(2).png");
 }
 
 #ws-main {
+    position: relative;
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -34,53 +70,151 @@ textarea {
     align-items: center;
 }
 
-#ws-area {
-    background-color: white;
-    padding: 2rem;
+.ws-areas {
+    position: absolute;
+    width: var(--ws-area-width);
+    height: var(--ws-area-height);
+    background-color: var(--ws-area-color);
     border-radius: 5px;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px;
 }
+.ws-areas[class~="closed"] {
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+}
+
+/* Animação de cards virando */
+.ws-areas[class~="closing"] {
+    animation: CardClosing var(--ws-card-transition-duration) linear;
+}
+.ws-areas[class~="opening"] {
+    animation: CardOpening var(--ws-card-transition-duration) linear;
+}
+
+@keyframes CardClosing {
+    100% {
+        -webkit-transform: rotate3d(0, 1, 0, 90deg);
+        transform: rotate3d(0, 1, 0, 90deg);
+    }
+}
+
+@keyframes CardOpening {
+    0% {
+        -webkit-transform: rotate3d(0, 1, 0, 90deg);
+        transform: rotate3d(0, 1, 0, 90deg);
+    }
+}
+
 
 /* Alinhar formulário */
-#ws-form-flex {
+.ws-form-flex {
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 }
+.ws-form-flex::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: -150px;
+    width: 60px;
+    height: 182px;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 3px;
+}
+.ws-form-flex#index::after {
+    background-image: linear-gradient(0deg, var(--ws-card-color-index-0) 0%, var(--ws-card-color-index-1) 100%);
+}
+.ws-form-flex#results::after {
+    background-image: linear-gradient(0deg, var(--ws-card-color-results-0) 0%, var(--ws-card-color-results-1) 100%);
+}
+.ws-form-flex#details::after {
+    background-image: linear-gradient(0deg, var(--ws-card-color-details-0) 0%, var(--ws-card-color-details-1) 100%);
+}
 
 /* Sessão do título */
-#ws-header-section {
+.ws-header-sections {
+    position: relative;
+    width: 100%;
+    height: 150px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    clip-path: polygon(100% 0, 100% 40%, 50% 100%, 0 40%, 0 0);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
     margin-bottom: 10px;
+}
+.ws-header-sections#index {
+    background: linear-gradient(90deg, var(--ws-card-color-index-1) 0%, var(--ws-card-color-index-0) 100%);
+}
+.ws-header-sections#results {
+    background: linear-gradient(90deg, var(--ws-card-color-results-1) 0%, var(--ws-card-color-results-0) 100%);
+}
+.ws-header-sections#details {
+    background: linear-gradient(90deg, var(--ws-card-color-details-1) 0%, var(--ws-card-color-details-0) 100%);
+}
+
+.ws-header-sections::after {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: 1;
+    top: 30px;
+    width: 77.5px;
+    height: 7.5px;
+    background-color: #202030;
+    border-radius: 15px;
+}
+
+/* Div do título */
+#ws-title-div {
+    margin-top: 30px;
 }
 
 /* Título */
 #ws-title {
+    color: #fff;
+    font-size: 30px;
+    font-weight: 100;
     margin: 0;
+}
+
+/* Div do ícone do título */
+#ws-title-icon-div {
+    position: absolute;
+    z-index: 1;
+    top: 80px;
+    background-color: #cfdaff;
+    padding: 10px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+#ws-title-icon-div:hover {
+    transform: scale(1.1);
 }
 
 /* Ícone do título */
 #ws-title-icon {
-    width: 50px;
-    height: 50px;
+    width: 90px;
+    height: 90px;
 }
 
 /* Div dos inputs */
 #ws-input-div {
-    background-color: #d0d0d0;
+    width: 100%;
     padding: 0.5rem;
-    border: 1px solid #bbb;
-    border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
+    padding-bottom: 2px;
 }
 
 /* Div dos botões de opções de input */
 #ws-input-option-buttons-div {
-    background-color: #bbb;
+    background-color: #80808030;
+    border: 1px solid rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
@@ -95,22 +229,29 @@ textarea {
 
 /* Botões de opções de input */
 .option-buttons {
+    cursor: pointer;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     gap: 5px;
-    background-color: #f0f0f0;
-    border: 1px solid #888;
+    width: 100px;
+    height: 40px;
+    background-color: var(--ws-option-buttons-color);
+    color: #fff;
+    border: unset;
     border-radius: 2px;
     padding: 2px 10px;
+    filter: grayscale(0.9);
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 1rem;
     transition: all 0.3s;
 }
 .option-buttons:hover {
-    filter: brightness(0.9);
+    filter: grayscale(0.9) brightness(0.9);
 }
 .option-buttons[class~="selected"] {
-    background-color: #a0a0a0;
+    background-color: var(--ws-option-buttons-color);
+    filter: unset;
 }
 .option-buttons[class~="selected"]:hover {
     cursor: not-allowed;
@@ -139,22 +280,40 @@ textarea {
     display: none;
 }
 
+/* Label dos inputs */
+.input-labels {
+    cursor: pointer;
+    color: #ffffff;
+    transition: all 0.3s;
+}
+.input-labels:hover {
+    color: var(--ws-text-input-text-color);
+}
+
+.ws-input-divs {
+    position: relative;
+}
+
 /* Input de texto */
 #text-input {
     resize: none;
+    overflow-x: hidden;
     width: 300px;
     height: 150px;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--ws-text-input-text-color);
+    font-size: 18px;
     border: unset;
     border-radius: 3px;
     padding: 5px;
-    outline: 1px solid #000;
+    outline: 1px solid #404040;
     transition: all 0.3s;
 }
 #text-input:hover {
-    outline: 1px solid #404040;
+    outline: 1px solid #2090ff;
 }
 #text-input:focus {
-    outline: 1px solid var(--submit-color);
+    outline: 1px solid var(--ws-text-input-text-color);
 }
 
 /* Inputs de texto */
@@ -171,6 +330,38 @@ input[type="text"]:focus {
     outline: 1px solid #2090d0;
 }
 
+/* Contador de letras */
+#letter-counter {
+    position: absolute;
+    top: -22.5px;
+    right: 5px;
+    color: var(--ws-letter-counter-normal);
+    transition: all 0.3s;
+}
+#letter-counter[class~="warn"] {
+    color: var(--ws-letter-counter-warn);
+    filter: drop-shadow(0px 0px 1px var(--ws-letter-counter-warn));
+}
+#letter-counter[class~="error"] {
+    color: var(--ws-letter-counter-error);
+    filter: drop-shadow(0px 0px 2px var(--ws-letter-counter-error));
+}
+
+/* Input de url */
+#url-input {
+    background-color: rgba(0, 0, 0, 0.2);
+    color: var(--ws-text-input-text-color);
+    font-size: 18px;
+    outline: 1px solid #404040;
+    margin-bottom: 10px;
+}
+#url-input:hover {
+    outline: 1px solid #2090ff;
+}
+#url-input:focus {
+    outline: 1px solid var(--ws-text-input-text-color);
+}
+
 /* Div da mensagem de aviso */
 #ws-warning-div {
     width: 100%;
@@ -184,12 +375,99 @@ input[type="text"]:focus {
     font-size: 10pt;
     text-align: center;
     color: #f02020;
+    text-shadow: 0px 0px 5px #f02020;
     margin: 0;
+    animation: WarningText 1s linear infinite;
+}
+@keyframes WarningText {
+    50% {
+        color: #f06060;
+        text-shadow: 0px 0px 5px #f06060;
+    }
+}
+
+/* Sessão das opções de checkbox */
+#ws-checkbox-section {
+    max-width: 200px;
+}
+
+/* Divs dos checkboxes */
+.ws-checkbox-divs {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Divs dos botões de checkbox (decoração) */
+.ws-checkbox-decoration-divs {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Input checkbox */
+input[type="checkbox"] {
+    cursor: pointer;
+    width: var(--ws-checkbox-size);
+    height: var(--ws-checkbox-size);
+}
+
+.ws-checkbox-decoration {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--ws-checkbox-size);
+    height: var(--ws-checkbox-size);
+    background-color: var(--ws-area-color);
+    border-radius: 3px;
+    outline: 2px solid var(--ws-checkbox-color);    
+    transition: all 0.3s;
+}
+
+input[type="checkbox"]:checked ~ .ws-checkbox-decoration {
+    outline: 2px solid var(--ws-checkbox-color);
+    filter: drop-shadow(0px 0px 2px var(--ws-checkbox-color));
+}
+
+input[type="checkbox"]:checked ~ .ws-checkbox-decoration::after {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -14px;
+    left: 2.5px;
+    transform: rotate(45deg) scale(0.5);
+    height: 40px;
+    width: 20px;
+    border-bottom: 9px solid var(--ws-checkbox-color);
+    border-right: 9px solid var(--ws-checkbox-color);
+    border-radius: 3px;
+    filter: drop-shadow(0px 0px 2px var(--ws-checkbox-color));
+}
+
+/* Labels dos inputs checkboxes */
+.ws-checkbox-labels {
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+.ws-checkbox-labels:hover {
+    color: var(--ws-checkbox-color);
 }
 
 /* Div do botão de submit */
 #ws-submit-div {
-    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
 }
 
 /* Divs dos botões de submit */
@@ -198,20 +476,120 @@ input[type="text"]:focus {
 }
 
 /* Botões de submit */
-.submit-buttons {
-    background-image: linear-gradient(0deg, var(--submit-color), transparent);
-    background-size: 500% 500%;
+.ws-index-buttons {
+    cursor: pointer;
+    background-color: transparent;
     color: var(--submit-color);
     width: 120px;
-    height: 40px;
+    height: 50px;
     border: 2px solid var(--submit-color);
-    border-radius: 25px;
     font-size: 14pt;
     transition: all 0.3s;
     box-shadow: rgba(0, 0, 0, 0.3) 0px 0px 5px;
 }
-.submit-buttons:hover {
-    transform: scale(1.05);
-    background-position: 100% 100%;
+.ws-index-buttons:hover {
+    transform: scale(1.1);
+    background-color: var(--submit-color);
     color: #fff;
+}
+
+/* Sessão do texto original */
+#ws-original-text-section {
+    width: 90%;
+    outline: 1px solid #606060;
+    border-radius: 5px;
+}
+
+/* Div do texto original */
+#ws-original-text-div {
+    height: 275px;
+    inline-size: 275px;
+    overflow-wrap: break-word;
+    padding: 2px;
+    overflow: auto;
+    overflow-x: hidden;
+    margin: auto;
+}
+
+#ws-original-text {
+    color: var(--ws-original-text-text-color);
+}
+
+/* Sessão dos detalhes */
+#ws-details-section {
+    width: 90%;
+}
+
+/* Textos dos detalhes */
+.ws-details-texts {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 100;
+    text-align: center;
+    margin: 0;
+}
+.details {
+    color: var(--ws-card-color-details-1);
+    font-weight: bold;
+}
+
+/* Sessões dos botões de mudar de cartão */
+.ws-move-buttons-sections {
+    width: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* Divs dos botões de avançar ou voltar */
+.ws-move-buttons-divs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botões dos resultados */
+.ws-move-buttons {
+    width: 120px;
+    height: 50px;
+    background-color: transparent;
+    font-size: 14pt;
+    transition: all 0.3s;
+}
+.ws-move-buttons:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+.ws-move-buttons#ws-move-index-results {
+    color: var(--ws-index-buttons-color);
+    border: 2px solid var(--ws-index-buttons-color);
+}
+.ws-move-buttons#ws-move-index-results:hover {
+    background-color: var(--ws-index-buttons-color);
+    color: #fff;
+    box-shadow: var(--ws-index-buttons-color) 0px 0px 5px;
+}
+
+.ws-move-buttons#ws-move-results-index, .ws-move-buttons#ws-move-results-details {
+    color: var(--ws-results-buttons-color);
+    border: 2px solid var(--ws-results-buttons-color);
+}
+.ws-move-buttons#ws-move-results-index:hover, .ws-move-buttons#ws-move-results-details:hover {
+    background-color: var(--ws-results-buttons-color);
+    color: #fff;
+    box-shadow: var(--ws-results-buttons-color) 0px 0px 5px;
+}
+
+.ws-move-buttons#ws-move-details-results {
+    color: var(--ws-details-buttons-color);
+    border: 2px solid var(--ws-details-buttons-color);
+}
+.ws-move-buttons#ws-move-details-results:hover {
+    background-color: var(--ws-details-buttons-color);
+    color: #fff;
+    box-shadow: var(--ws-details-buttons-color) 0px 0px 5px;
 }
