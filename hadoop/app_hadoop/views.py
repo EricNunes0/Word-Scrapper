@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_protect
 from io import BytesIO
 from .functions.urlget import GetURLText
 from .functions.main import WordAmount
+from .functions.music import MusicLyrics
 import json
 import numpy
 
@@ -14,12 +15,18 @@ def index(request):
         inputType = request.POST.get("type")
         textInput = request.POST.get(f"{inputType}-input")
         checkboxes = request.POST.getlist("checkboxes")
+        if inputType == "url":
+            textInput = GetURLText().get(textInput)
+        elif inputType == "music":
+            artist = request.POST.get("author")
+            if artist:
+                textInput = MusicLyrics().get(textInput, artist)
+            else:
+                textInput = MusicLyrics().get(textInput, None)
+        
         print("『🔴』Tipo de input:", inputType, "『🔵』Texto para converter:", textInput)
         print("『📦』Checkboxes:", checkboxes)
 
-        if inputType == "url":
-            textInput = GetURLText().get(textInput)
-        
         if textInput == None:
             textInput = "Nenhum resultado encontrado"
 
@@ -34,12 +41,17 @@ def index(request):
             "word": "",
             "length": 0
         }
+        limit = request.POST.get("limit")
+        if not request.POST.get("limit"):
+            limit = 20
         with mr_job.make_runner() as runner:
             runner.run()
             for key, value in mr_job.parse_output(runner.cat_output()):
                 if "removeNumbers" in checkboxes:
                     if key.isnumeric():
-                        print(key, "é um número")
+                        continue
+                if "limitLetters" in checkboxes:
+                    if len(key) > int(limit):
                         continue
                 results.append([key, value])
                 wordCount = wordCount + 1

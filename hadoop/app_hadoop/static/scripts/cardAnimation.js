@@ -1,6 +1,6 @@
 const wsAreaIndex = document.querySelector("#ws-area-index");
 const wsAreaResults = document.querySelector("#ws-area-results");
-const cardAnimationDuration = 0.3;
+const cardAnimationDuration = 0.5;
 
 function leftCardAnimation({oldCard, newCard}) {
     const wsAreaOld = document.querySelector(`#ws-area-${oldCard}`);
@@ -21,15 +21,15 @@ function leftCardAnimation({oldCard, newCard}) {
 function rightCardAnimation({oldCard, newCard}) {
     const wsAreaOld = document.querySelector(`#ws-area-${oldCard}`);
     const wsAreaNew = document.querySelector(`#ws-area-${newCard}`);
-    wsAreaOld.classList.add("closing");
+    wsAreaOld.classList.add("closing-reverse");
     setTimeout(function() {
-        wsAreaOld.classList.replace("closing", "closed");
+        wsAreaOld.classList.replace("closing-reverse", "closed");
         wsAreaNew.classList.remove("closed");
-        wsAreaNew.classList.add("opening");
+        wsAreaNew.classList.add("opening-reverse");
         document.querySelector("#ws-home").className = newCard;
         changePageIcon({type: newCard});
         setTimeout(function() {
-            wsAreaNew.classList.remove("opening");
+            wsAreaNew.classList.remove("opening-reverse");
         }, cardAnimationDuration * 1000);
     }, cardAnimationDuration * 1000);
 };

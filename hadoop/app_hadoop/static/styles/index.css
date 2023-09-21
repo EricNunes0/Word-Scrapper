@@ -1,5 +1,5 @@
 :root {
-    --submit-color: #2090d0;
+    --submit-color: #4080f0;
     --ws-area-color: #202024;
     --ws-area-width: 320px;
     --ws-area-height: 580px;
@@ -12,8 +12,8 @@
     --ws-card-color-scrap-0: #ff9070;
     --ws-card-color-scrap-1: #f9cb28;
     --ws-card-animation-perspective: 1500px;
-    --ws-card-transition-duration: 0.3s;
-    --ws-checkbox-color: #20b0ff;
+    --ws-card-transition-duration: 0.5s;
+    --ws-checkbox-color: #4080ff;
     --ws-checkbox-size: 20px;
     --ws-letter-counter-normal: #a0a0a0;
     --ws-letter-counter-warn: #f0b000;
@@ -99,14 +99,34 @@ textarea {
     animation: CardOpening var(--ws-card-transition-duration) linear;
 }
 
+/* Animação de cards virando (reverse) */
+.ws-areas[class~="closing-reverse"] {
+    animation: CardClosingReverse var(--ws-card-transition-duration) linear;
+}
+.ws-areas[class~="opening-reverse"] {
+    animation: CardOpeningReverse var(--ws-card-transition-duration) linear;
+}
+
 @keyframes CardClosing {
     100% {
         -webkit-transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, 90deg);
         transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, 90deg);
     }
 }
-
 @keyframes CardOpening {
+    0% {
+        -webkit-transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, -90deg);
+        transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, -90deg);
+    }
+}
+
+@keyframes CardClosingReverse {
+    100% {
+        -webkit-transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, -90deg);
+        transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, -90deg);
+    }
+}
+@keyframes CardOpeningReverse {
     0% {
         -webkit-transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, 90deg);
         transform: perspective(var(--ws-card-animation-perspective)) rotate3d(0, 1, 0, 90deg);
@@ -311,7 +331,7 @@ textarea {
     resize: none;
     overflow-x: hidden;
     width: 300px;
-    height: 150px;
+    height: 100px;
     background-color: rgba(0, 0, 0, 0.2);
     color: var(--ws-text-input-text-color);
     font-size: 18px;
@@ -398,18 +418,15 @@ input[type="text"]:focus {
     }
 }
 
-/* Sessão das opções de checkbox */
-#ws-checkbox-section {
-    max-width: 200px;
-}
-
 /* Divs dos checkboxes */
 .ws-checkbox-divs {
+    position: relative;
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     gap: 10px;
+    margin: 5px 0;
 }
 
 /* Divs dos botões de checkbox (decoração) */
@@ -472,14 +489,61 @@ input[type="checkbox"]:checked ~ .ws-checkbox-decoration::after {
     color: var(--ws-checkbox-color);
 }
 
+/* Div da opção de limitar caracteres */
+#ws-checkbox-limit-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+#ws-checkbox-limit-div[class~="closed"] {
+    display: none;
+}
+
+/* Inputs de número */
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    width: 45px;
+    height: 30px;
+    background-color: transparent;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    border-top: 2px solid var(--ws-checkbox-color);
+    border-bottom: 2px solid var(--ws-checkbox-color);
+    border-left: unset;
+    border-right: unset;
+    transition: all 0.3s;
+}
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+}
+
+/* Botões de adicionar ou subtrair o limite de caracteres */
+.ws-checkbox-limit-buttons {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    color: var(--ws-checkbox-color);
+    font-weight: bold;
+    border: 2px solid var(--ws-checkbox-color);
+    transition: all 0.3s;
+}
+.ws-checkbox-limit-buttons:hover {
+    background-color: var(--ws-checkbox-color);
+    color: #fff;
+}
+
 /* Div do botão de submit */
 #ws-submit-div {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    margin: 10px 0;
+    margin: 5px 0;
 }
 
 /* Divs dos botões de submit */
@@ -493,7 +557,7 @@ input[type="checkbox"]:checked ~ .ws-checkbox-decoration::after {
     background-color: transparent;
     color: var(--submit-color);
     width: 120px;
-    height: 50px;
+    height: 40px;
     border: 2px solid var(--submit-color);
     font-size: 14pt;
     transition: all 0.3s;
@@ -619,7 +683,7 @@ input[type="checkbox"]:checked ~ .ws-checkbox-decoration::after {
 /* Botões dos resultados */
 .ws-move-buttons {
     width: 120px;
-    height: 50px;
+    height: 40px;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -673,6 +737,10 @@ input[type="checkbox"]:checked ~ .ws-checkbox-decoration::after {
     background-color: var(--ws-scrap-buttons-color);
     color: #fff;
     box-shadow: var(--ws-scrap-buttons-color) 0px 0px 5px;
+}
+
+#ws-move-index-results {
+    margin-left: 10px;
 }
 
 .ws-move-button-icons {
