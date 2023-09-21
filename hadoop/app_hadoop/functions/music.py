@@ -10,8 +10,10 @@ class MusicLyrics():
 				return None
 			song = artist.song(input)
 		else:
-			print(input)
-			song = genius.search_song(input)
+			try:
+				song = genius.search_song(input)
+			except:
+				return None
 		if not song:
 			print("Nenhuma música encontrada!")
 			return None
