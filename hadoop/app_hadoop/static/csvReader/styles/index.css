@@ -1,0 +1,676 @@
+:root {
+    --csv-area-border: 2px solid #ada;
+    --csv-area-border-radius: 10px;
+    --csv-area-color: #202024;
+    --csv-form-width: 300px;
+    --csv-form-height: 400px;
+    --csv-form-send-button-width: 180px;
+    --csv-form-send-button-height: 45px;
+    --csv-form-buttons-color-green: #00c060;
+    --csv-input-divs-width: var(var(--csv-form-width));
+    --csv-input-divs-height: 190px;
+    --csv-input-divs-animation-duration: 0.5s;
+    --csv-input-checkbox-color: #00c060;
+    --csv-input-checkbox-width: 20px;
+    --csv-input-checkbox-height: 20px;
+    --csv-input-number-border-color: #00c060;
+    --csv-input-radio-color: #00c060;
+    --csv-input-radio-width: 20px;
+    --csv-input-radio-height: 20px;
+    --csv-results-buttons-color: #009ac0;
+    --csv-text-inputs-color: #00c060;
+    --csv-type-buttons-color: #00c060;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+html, body {
+    overflow: hidden;
+}
+
+/* Corpo da página */
+#csv-body {
+    width: 100vw;
+    height: 100vh;
+}
+
+/* Cenário da página */
+#csv-background {
+    pointer-events: none;
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(180deg, rgb(20, 100, 20, 0.15), rgba(0, 0, 0, 1)), url("../images/background(0).png");
+    background-position: center;
+    background-size: cover;
+    transition: all 0.3s;
+}
+#csv-background[class~="home"] {
+    filter: hue-rotate(0deg);
+}
+#csv-background[class~="results"] {
+    filter: hue-rotate(90deg);
+}
+
+@keyframes BackgroundAnimation {
+
+}
+
+/* Flocos do cenário */
+.csv-background-circles {
+    position: absolute;
+    top: 100%;
+    animation-name: BackgroundCircles;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+.csv-background-circles::after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    mix-blend-mode: screen;
+    background-image: radial-gradient(
+      rgb(150, 255, 150),
+      rgb(150, 255, 150) 10%,
+      hsla(180, 100%, 80%, 0) 56%
+    );
+    animation: BackgroundCirclesGlow 1s linear infinite;
+    filter: drop-shadow(0px 0px 3px rgb(150, 255, 150));
+    transition: all 0.3s;
+}
+
+@keyframes BackgroundCircles {
+    20%, 60% {
+        transform: translateX(-30px);
+    }
+    40%, 80% {
+        transform: translateX(30px);
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        top: 0%;
+        opacity: 0;
+    }
+}
+
+@keyframes BackgroundCirclesGlow {
+    40%, 60% {
+        transform: scale(0.4);
+    }
+}
+
+/* Principal da página */
+#csv-main {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Área principal */
+#csv-area {
+    background-color: transparent;
+    border-radius: var(--csv-area-border-radius);
+}
+
+/* Início */
+#csv-home {
+    width: var(--csv-form-width);
+    height: var(--csv-form-height);
+    border-radius: var(--csv-area-border-radius);
+}
+#csv-home[class~="closed"] {
+    display: none;
+}
+
+/* Sessão de escolher tipo de envio */
+#csv-type-section {
+    width: 100%;
+    background-color: var(--csv-area-color);
+    padding: 10px 0;
+    border-top: var(--csv-area-border);
+    border-left: var(--csv-area-border);
+    border-right: var(--csv-area-border);
+    border-top-left-radius: var(--csv-area-border-radius);
+    border-top-right-radius: var(--csv-area-border-radius);
+}
+
+/* Área da sessão de escolher tipo de envio */
+#csv-type-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botões dos tipo de envio */
+.type-buttons {
+    cursor: pointer;
+    width: 100px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background-color: var(--csv-type-buttons-color);
+    color: #fff;
+    border: unset;
+    border-radius: 2px;
+    filter: grayscale(0.9);
+    transition: all 0.3s;
+}
+.type-buttons[class~="selected"] {
+    cursor: not-allowed;
+    filter: unset;
+}
+
+/* Divs dos ícones dos botões de escolher tipo */
+.type-button-icon-divs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Ícones dos botões de escolher tipo */
+.type-button-icons {
+    width: 20px;
+    height: 20px;
+}
+
+/* Textos dos botões de escolher tipo */
+.type-button-texts {
+    font-size: 18px;
+}
+
+/* Input file */
+input[type="file"] {
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    max-width: calc(var(--csv-form-width) - 20px);
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(150, 150, 150, 0.2);
+    color: transparent;
+    border-color: rgba(150, 150, 150, 0.5);
+    border-style: dashed;
+    border-width: 2px;
+    border-radius: 5px;
+    text-align: center;
+    transition: all 0.3s;
+}
+input[type="file"]::after {
+    content: "Arraste e solte o arquivo .csv\apara enviá-lo";
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+    transition: all 0.3s;
+}
+input[type="file"]:hover {
+    border-color: var(--csv-form-buttons-color-green);
+    filter: drop-shadow(0px 0px 3px var(--csv-form-buttons-color-green));
+}
+input[type="file"]:hover::after {
+    color: var(--csv-form-buttons-color-green);
+}
+input[type="file"]::-webkit-file-upload-button {
+    cursor: pointer;
+    position: absolute;
+    top: 70px;
+    left: calc(50% - calc(var(--csv-form-send-button-width) / 2));
+    width: var(--csv-form-send-button-width);
+    height: var(--csv-form-send-button-height);
+    background-color: var(--csv-form-buttons-color-green);
+    color: #fff;
+    border: unset;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Sessão das divs dos inputs de texto */
+#csv-input-section {
+    position: relative;
+    width: var(--csv-input-divs-width);
+    height: var(--csv-input-divs-height);
+}
+
+/* Divs dos inputs de texto */
+.csv-input-divs {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--csv-area-color);
+    border-left: var(--csv-area-border);
+    border-right: var(--csv-area-border);
+    transition: all calc(var(--csv-input-divs-animation-duration) / 2) linear;
+}
+.csv-input-divs[class~="opened"] {
+    opacity: 1;
+}
+.csv-input-divs[class~="opening"] {
+    position: absolute;
+    top: 0;
+    transform: rotate3d(0, 1, 0, 90deg);
+}
+.csv-input-divs[class~="closing"] {
+    position: absolute;
+    top: 0;
+    transform: rotate3d(0, 1, 0, 90deg);
+}
+.csv-input-divs[class~="closed"] {
+    display: none;
+}
+
+/* Labels */
+.csv-labels {
+    color: #fff;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+.csv-labels:hover {
+    color: #00c060;
+}
+
+/* Inputs de texto */
+.csv-text-inputs {
+    width: 260px;
+    height: 35px;
+    background-color: transparent;
+    color: #fff;
+    font-size: 18px;
+    padding-left: 5px;
+    border: unset;
+    border-bottom: 1px solid #606060;
+    transition: all 0.3s;
+}
+.csv-text-inputs::placeholder {
+    color: #b0b0b0;
+    opacity: 1;
+}
+.csv-text-inputs:hover {
+    border-bottom: 1px solid #fff;
+}
+.csv-text-inputs:focus {
+    outline: none;
+    border-bottom: 1px solid var(--csv-text-inputs-color);
+}
+
+/* Configurações */
+#csv-settings-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--csv-area-color);
+    border-left: var(--csv-area-border);
+    border-right: var(--csv-area-border);
+}
+
+/* Área das configurações */
+#csv-settings-area {
+    padding: 10px 0;
+}
+
+/* Divs dos títulos das configurações */
+.csv-settings-title-divs {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Títulos das configurações */
+.csv-settings-titles {
+    color: #fff;
+    font-size: 18px;
+}
+
+/* Alinhar divs dos inputs das configurações */
+.csv-settings-sections {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.csv-settings-sections[class~="closed"] {
+    display: none;
+}
+
+/* Labels das opções de configurações */
+.csv-settings-labels {
+    color: #fff;
+    font-size: 18px;
+}
+
+/* Divs das opções de configurações */
+.csv-settings-option-divs {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Divs dos inputs radio */
+.csv-settings-input-divs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Input radio */
+input[type="radio"] {
+    cursor: pointer;
+    width: var(--csv-input-radio-width);
+    height: var(--csv-input-radio-height);
+    background-color: var(--csv-input-radio-color);
+    border: 2px solid var(--csv-input-radio-color);
+}
+
+/* Decorações dos input radios */
+.csv-settings-input-decorations {
+    pointer-events: none;
+    display: block;
+    position: absolute;
+    top: 1px;
+    width: var(--csv-input-radio-width);
+    height: var(--csv-input-radio-height);
+    background-color: var(--csv-area-color);
+    border-radius: 50%;
+    outline: 1px solid var(--csv-input-radio-color);
+}
+input[type="radio"]:checked ~ .csv-settings-input-decorations {
+    background-image: radial-gradient(ellipse at center, var(--csv-input-radio-color) 0%, var(--csv-input-radio-color) 50%, transparent 60%);
+    outline: 2px solid var(--csv-input-radio-color);
+}
+
+/* Área de ativar/desativar configurações */
+.csv-settings-active-area {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Divs dos checkboxes de ativar configurações */
+.active-button-divs {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botões de ativar configurações */
+.active-buttons {
+    cursor: pointer;
+    width: var(--csv-input-checkbox-width);
+    height: var(--csv-input-checkbox-height);
+}
+
+.active-button-decorations {
+    pointer-events: none;
+    position: absolute;
+    width: var(--csv-input-checkbox-width);
+    height: var(--csv-input-checkbox-height);
+    background-color: var(--csv-area-color);
+    border-radius: 3px;
+    outline: 1px solid var(--csv-input-checkbox-color);
+}
+
+.active-buttons:checked ~ .active-button-decorations {
+    outline: 2px solid var(--csv-input-checkbox-color);
+    filter: drop-shadow(0px 0px 3px var(--csv-input-checkbox-color));
+}
+.active-buttons:checked ~ .active-button-decorations::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 8px;
+    transform: rotate(45deg);
+    height: 20px;
+    width: 7.8px;
+    border-bottom: 3px solid var(--csv-input-checkbox-color);
+    border-right: 3px solid var(--csv-input-checkbox-color);
+}
+
+/* Inputs de número */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Inputs de número das configurações */
+.csv-number-inputs {
+    width: 50px;
+    height: 30px;
+    background-color: transparent;
+    color: #fff;
+    font-size: 18px;
+    border: unset;
+    border-bottom: 1px solid #606060;
+    outline: none;
+    transition: all 0.3s;
+}
+.csv-number-inputs:hover {
+    border-bottom: 1px solid #fff;
+}
+.csv-number-inputs:focus {
+    border-bottom: 1px solid var(--csv-input-number-border-color);
+}
+
+/* Footer do formulário */
+#csv-form-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--csv-area-color);
+    border-bottom: var(--csv-area-border);
+    border-left: var(--csv-area-border);
+    border-right: var(--csv-area-border);
+    border-bottom-left-radius: var(--csv-area-border-radius);
+    border-bottom-right-radius: var(--csv-area-border-radius);
+}
+
+/* Botões do formulário */
+.csv-form-buttons {
+    cursor: pointer;
+    width: 150px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background-color: transparent;
+    border-radius: 3px;
+    border-color: unset;
+    border-style: solid;
+    border-width: 2px;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+.csv-form-buttons:hover {
+    transform: scale(1.1);
+}
+.csv-form-buttons[class~="green"] {
+    color: var(--csv-form-buttons-color-green);
+    border-color: var(--csv-form-buttons-color-green);
+}
+.csv-form-buttons[class~="green"]:hover {
+    color: #fff;
+    background-color: var(--csv-form-buttons-color-green);
+    filter: drop-shadow(0px 0px 5px var(--csv-form-buttons-color-green));
+}
+
+/* Ícones dos botões */
+.csv-form-button-icons {
+    display: block;
+    width: 18px;
+    height: 18px;
+    transition: all 0.3s;
+}
+#submit-icon {
+    background-image: url("../svgs/submit(1).svg");
+}
+#csv-submit-button:hover > .csv-form-button-icon-divs > #submit-icon {
+    background-image: url("../svgs/submit(0).svg");
+}
+
+/* Div do aviso */
+#warning-div {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Aviso */
+#warning {
+    color: #f0d020;
+    text-shadow: 0px 0px 3px #f0d020;
+}
+
+/* Div do erro */
+#error-div {
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Aviso */
+#error {
+    color: #f02020;
+    text-shadow: 0px 0px 3px #f02020;
+}
+
+/* Div da tabela */
+#csv-results {
+    background-color: var(--csv-area-color);
+    border-radius: var(--csv-area-border-radius);
+    padding: 10px;
+}
+#csv-results[class~="closed"] {
+    display: none;
+}
+
+#csv-table-area {
+    max-width: 700px;
+    max-height: 400px;
+    overflow: auto;
+    margin-bottom: 15px;
+}
+
+/* Tabela */
+#csv-table {
+    max-width: 700px;
+    max-height: 400px;
+    background-image: linear-gradient(105deg, #41b6c5, #047abe);
+    background-size: 100% 100%;
+    border-radius: 3px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.table-rows {
+    width: 700px;
+}
+
+.table-headers, .table-datas {
+    cursor: pointer;
+    color: #fff;
+    border-width: 0;
+    padding: 10px 15px;
+    transition: all 0.2s;
+}
+
+.table-datas {
+    box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+}
+.table-datas:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.table-datas[class~="effect"] {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Sessão dos botões dos resultados */
+#csv-results-button-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Área dos botões dos resultados */
+#csv-results-button-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Divs dos botões dos resultados */
+.csv-result-button-divs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Botões dos resultados */
+.csv-result-buttons {
+    cursor: pointer;
+    width: 120px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    background-color: transparent;
+    color: var(--csv-results-buttons-color);
+    border: 2px solid var(--csv-results-buttons-color);
+    font-size: 18px;
+    transition: all 0.3s;
+}
+.csv-result-buttons:hover {
+    transform: scale(1.1);
+    background-color: var(--csv-results-buttons-color);
+    color: #fff;
+    filter: drop-shadow(0px 0px 3px var(--csv-results-buttons-color));
+}
+
+/*  Ícones dos botões dos resultados */
+.csv-result-button-icons {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s;
+}
+.csv-result-button-icons[class~="left"][class~="blue"] {
+    background-image: url("../svgs/arrows/left(0).svg");
+}
+.csv-result-buttons:hover > .csv-result-button-icon-divs > .csv-result-button-icons[class~="left"][class~="blue"] {
+    background-image: url("../svgs/arrows/left.svg");
+}

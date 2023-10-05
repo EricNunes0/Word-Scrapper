@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Reader</title>
+    <link rel = "icon" href = "{% static 'csvReader/images/logo(0).png' %}">
+    <link rel = "stylesheet" href = "{% static 'csvReader/styles/index.css' %}"/>
+</head>
+<body id = "csv-body">
+    <div class="home" id = "csv-background">
+        <span class = "csv-background-circles"></span>
+    </div>
+    <main id = "csv-main">
+        <div id = "csv-area">
+            <div class="csv-locations" id = "csv-home">
+                <section id = "csv-type-section">
+                    <div id = "csv-type-area">
+                        <div class = "csv-type-button-divs">
+                            <button type="button" class = "type-buttons selected" id = "file-button" onclick="typeButtons('file')">
+                                <div class = "type-button-icon-divs">
+                                    <img src = "{% static 'csvReader/svgs/file.svg' %}" class="type-button-icons"></img>
+                                </div>
+                                <div class = "type-button-text-divs">
+                                    <p class="type-button-texts">Arquivo</p>
+                                </div>
+                            </button>
+                        </div>
+                        <div class = "csv-type-button-divs">
+                            <button type="button" class = "type-buttons" id = "url-button" onclick="typeButtons('url')">
+                                <div class = "type-button-icon-divs">
+                                    <img src = "{% static 'csvReader/svgs/url.svg' %}" class="type-button-icons"></img>
+                                </div>
+                                <div class = "type-button-text-divs">
+                                    <p class="type-button-texts">URL</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+                <div id = "csv-form-div">
+                    <form id = "csv-form" action = "/csv-reader/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" id = "type-hidden" name = "type" value = "file">
+                        <section id = "csv-input-section">
+                            <div class = "csv-input-divs opened" id = "file-div">
+                                <input type="file" id = "csv-file" name = "csv" accept=".csv"/>
+                            </div>
+                            <div class = "csv-input-divs closed" id = "url-div">
+                                <div class = "csv-text-input-label-divs">
+                                    <label for = "csv-url" class ="csv-labels" id = "csv-url-label">URL:</label>
+                                </div>
+                                <div class = "csv-text-input-label-divs" for = "csv-url">
+                                    <input type="url" name="url" class = "csv-text-inputs" id = "csv-url" placeholder = "https://">
+                                </div>
+                            </div>
+                        </section>
+                        <section id = "csv-settings-section">
+                            <div id = "csv-settings-area">
+                                <div class = "csv-settings-divs">
+                                    <div class = "csv-settings-title-divs">
+                                        <span class = "csv-settings-titles">Delimitador:</span>
+                                    </div>
+                                    <section class="csv-settings-sections">
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "csv-settings-labels" for = "comma">,</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="radio" class = "csv-settings-inputs" id = "comma" name = "delimiter" value = "," checked/>
+                                                <span class = "csv-settings-input-decorations"></span>
+                                            </div>
+                                        </div>
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "csv-settings-labels" for = "semicolon">;</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="radio" class = "csv-settings-inputs" id = "semicolon" name = "delimiter" value = ";"/>
+                                                <span class = "csv-settings-input-decorations"></span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class = "csv-settings-divs">
+                                    <div class = "csv-settings-active-area">
+                                        <div class = "csv-settings-title-divs">
+                                            <span class = "csv-settings-titles">Limitar linhas:</span>
+                                        </div>
+                                        <div class = "active-button-divs">
+                                            <input type="checkbox" class = "active-buttons" id = "rows"/>
+                                            <span class="active-button-decorations"></span>
+                                        </div>
+                                    </div>
+                                    <section class="csv-settings-sections closed" id = "settings-section-rows">
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "csv-settings-labels" for = "rows">Linhas:</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="number" class = "csv-number-inputs" id = "rows" name = "rows" min="1" max="9999" maxlength="4"/>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </section>
+                        <footer id = "csv-form-footer">
+                            <div id = "csv-submit-button-div">
+                                <button type="submit" class = "csv-form-buttons green" id = "csv-submit-button">
+                                    <div class = "csv-form-button-icon-divs">
+                                        <div class = "csv-form-button-icons" id = "submit-icon"></div>
+                                    </div>
+                                    <div class = "csv-form-button-span-divs">
+                                        <span class = "csv-form-button-spans">Enviar</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div id = "warning-div">
+                                <span id = "warning"></span>
+                            </div>
+                            <div id = "error-div">
+                                <span id = "error"></span>
+                            </div>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+            <div class="csv-locations" id = "csv-results">
+                <div id = "csv-table-area">
+                    <table id = "csv-table">
+                        <tbody id = "csv-table-tbody">
+                            <tr class = "table-rows" id = "first-row">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <section id = "csv-results-button-section">
+                    <div id = "csv-results-button-area">
+                        <div class = "csv-result-button-divs">
+                            <button type="button" class = "csv-result-buttons" id = "move-results-home" onclick = "moveLocation({before: 'results', after: 'home'})">
+                                <div class="csv-result-button-icon-divs">
+                                    <div class = "csv-result-button-icons left blue"></div>
+                                </div>
+                                <div class="csv-result-button-text-divs">
+                                    <p class = "csv-result-button-texts">Voltar</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript">
+        const csvBackground = document.querySelector("#csv-background");
+        const csvHome = document.querySelector("#csv-home");
+        const csvResults = document.querySelector("#csv-results");
+        let csvReceive = "{{csv|escapejs}}";
+        if(csvReceive.length !== 0) {
+            csvBackground.className = "results";
+            csvHome.classList.add("closed");
+            csvResults.classList.remove("closed");
+            let csvJson = JSON.parse(csvReceive);
+            let ths = Object.keys(csvJson[0]);
+            const tbody = document.querySelector("#csv-table-tbody");
+            const firstRow = document.querySelector("#first-row");
+            for(let i = 0; i <= ths.length - 1; i++) {
+                let th = document.createElement("th");
+                th.className = "table-headers";
+                th.innerHTML = ths[i];
+                firstRow.appendChild(th);
+            };
+            for(let j = 0; j <= csvJson.length - 1; j++) {
+                let tr = document.createElement("tr");
+                tr.className = "table-rows";
+                for(let k = 0; k <= ths.length - 1; k++) {
+                    let td = document.createElement("td");
+                    td.className = "table-datas";
+                    td.id = `${j}-${k}`;
+                    td.innerHTML = csvJson[j][ths[k]];
+                    tr.appendChild(td);
+                };
+                tbody.appendChild(tr);
+            };
+            console.log(csvJson);
+        } else {
+            csvHome.classList.remove("closed");
+            csvResults.classList.add("closed");
+        };
+    </script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/activeButtons.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/backgroundCircles.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/errorAlert.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/fileSend.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/formSubmit.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/numberInputs.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/moveLocation.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/tableDataHover.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/typeButtons.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'csvReader/scripts/warningAlert.js' %}"></script>
+</body>
+</html>
