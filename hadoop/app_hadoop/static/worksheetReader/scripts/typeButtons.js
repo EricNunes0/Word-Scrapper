@@ -7,8 +7,10 @@ function typeButtons(type) {
     for(const button of typeButtons) {
         if(button.id === `${type}-button`) {
             button.classList.add("selected");
+            button.disabled = true;
         } else {
             button.classList.remove("selected");
+            button.disabled = false;
         };
     };
     for(const input of inputDivs) {

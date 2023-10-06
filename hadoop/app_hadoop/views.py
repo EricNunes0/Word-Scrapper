@@ -74,24 +74,58 @@ def index(request):
         json_wordMostRepeated = json.dumps(wordMostRepeat)
         return render(request, 'wordScrapper/pages/index.html', {'textInput': json_input, 'results': json_string, 'wordCount': json_wordCount, 'wordRepeat': json_wordRepeat, 'wordBiggest': json_wordBiggest, 'wordMostRepeated': json_wordMostRepeated})
 
-class CsvReader(TemplateView):
-    template_name = 'csvReader/pages/index.html'
+class wordsheetReader(TemplateView):
+    template_name = 'wordsheet/pages/index.html'
     def get(self, request):
         return render(request, self.template_name)
     def post(self, request):
+        acceptedExtensions = [".xls", ".xlsx", ".xlsm", ".xlsb", ".csv"]
+
+        extension = request.POST.get("extension")
+        if not extension in acceptedExtensions:
+            return self.returnRenderError(req = request, error = f"Formato inválido: {extension}")
+
         inputType = request.POST.get("type")
+        if not inputType:
+            return self.returnRenderError(req = request, error = f"Forma de envio não especificado!")
+        
+        checkExt = self.checkExtension
+        if inputType == "file":
+            file = request.FILES["file"]
+            if checkExt(extension, ".xls") or checkExt(extension, ".xlsx") or checkExt(extension, ".xlsm") or checkExt(extension, ".xlsb"):
+                read = BytesIO(file.read())
+            elif checkExt(extension, ".csv"):
+                read = StringIO(file.read().decode('latin-1'))
+            else:
+                return self.returnRenderError(req = request, error = f"Este não é um formato válido!")
+        elif inputType == "url":
+            file = request.POST.get("url")
+            read = f"{file}"
         rows = request.POST.get("rows")
         if len(rows) == 0:
-            rows = None
-        if inputType == "file":
-            csvFile = request.FILES["csv"]
-            csvRead = StringIO(csvFile.read().decode('latin-1'))
-        elif inputType == "url":
-            csvFile = request.POST.get("url")
-            csvRead = f"{csvFile}"
+            rows = 999
+        rows = int(rows)
         delimiter = request.POST.get("delimiter")
-        csvData = pandas.read_csv((csvRead), nrows=rows, delimiter=delimiter)
-        #columns = csvData.columns.tolist()
-        csvRows = csvData.head(n=rows)
-        csvJsonStr = csvRows.to_json(orient='records')
-        return render(request, self.template_name, {'csv': csvJsonStr})
+
+        if checkExt(extension, ".xls"):
+            try:
+                data = pandas.read_excel((read), engine="xlrd", nrows=rows)
+            except Exception as e:
+                print(e)
+                return self.returnRenderError(req = request, error = f"Não foi possível processar este arquivo!")
+        elif checkExt(extension, ".xlsx") or checkExt(extension, ".xlsm"):
+            data = pandas.read_excel((read), engine="openpyxl", nrows=rows)
+        elif checkExt(extension, ".xlsb"):
+            data = pandas.read_excel((read), engine="pyxlsb", nrows=rows)
+        elif checkExt(extension, ".csv"):
+            data = pandas.read_csv((read), nrows=rows, delimiter=delimiter)
+        #columns = data.columns.tolist()
+        dataRows = data.head(n=rows)
+        dataJsonStr = dataRows.to_json(orient='records')
+        return render(request, self.template_name, {'csv': dataJsonStr})
+
+    def returnRenderError(self, req, error: str):
+        return render(req, self.template_name, {"error": error})
+    
+    def checkExtension(self, var: str, string: str):
+        return var == string

@@ -1,4 +1,4 @@
-const numberInputs = document.querySelectorAll(".csv-number-inputs");
+const numberInputs = document.querySelectorAll(".number-inputs");
 
 for(const number of numberInputs) {
     number.addEventListener("change", () => {

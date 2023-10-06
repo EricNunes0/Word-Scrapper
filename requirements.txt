@@ -4,3 +4,6 @@ lyricsgenius
 
 pandas
 djangorestframework
+xlrd
+openpyxl
+pyxlsb

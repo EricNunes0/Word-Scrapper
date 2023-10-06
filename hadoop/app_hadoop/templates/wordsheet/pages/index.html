@@ -1,0 +1,231 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Worksheet Reader</title>
+    <link rel = "icon" href = "{% static 'worksheetReader/images/logo(0).png' %}">
+    <link rel = "stylesheet" href = "{% static 'worksheetReader/styles/index.css' %}"/>
+</head>
+<body id = "worksheet-body">
+    <div class="home" id = "worksheet-background">
+        <canvas id = "worksheet-background-canvas"></canvas>
+        <div id = "worksheet-background-canvas-image"></div>
+        <div id = "worksheet-background-circles-div"></div>
+    </div>
+    <main id = "csv-main">
+        <div id = "csv-area">
+            <div class="csv-locations" id = "csv-home">
+                <div id = "csv-form-div">
+                    <form id = "csv-form" action = "/worksheet-reader/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" id = "type-hidden" name = "type" value = "file">
+                        <header id = "form-header">
+                            <div id = "form-header-div">
+                                <section id = "extension-section">
+                                    <div id = "extension-area">
+                                        <div id = "extension-select-div">
+                                            <select name="extension" id="extension-select">
+                                                <option class="extension-options" value="">Extensão</option>
+                                                <option class="extension-options" value=".xls">.xls</option>
+                                                <option class="extension-options" value=".xlsx">.xlsx</option>
+                                                <option class="extension-options" value=".xlsm">.xlsm</option>
+                                                <option class="extension-options" value=".xlsb">.xlsb</option>
+                                                <option class="extension-options" value=".csv">.csv</option>
+                                            </select>                                
+                                        </div>
+                                    </div>
+                                </section>
+                                <section id = "type-section">
+                                    <div id = "csv-type-area">
+                                        <div class = "csv-type-button-divs">
+                                            <button type="button" class = "type-buttons selected" id = "file-button" onclick="typeButtons('file')" disabled>
+                                                <div class = "type-button-icon-divs">
+                                                    <img src = "{% static 'worksheetReader/svgs/file.svg' %}" class="type-button-icons"></img>
+                                                </div>
+                                                <div class = "type-button-text-divs">
+                                                    <p class="type-button-texts">Arquivo</p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                        <div class = "csv-type-button-divs">
+                                            <button type="button" class = "type-buttons" id = "url-button" onclick="typeButtons('url')">
+                                                <div class = "type-button-icon-divs">
+                                                    <img src = "{% static 'worksheetReader/svgs/url.svg' %}" class="type-button-icons"></img>
+                                                </div>
+                                                <div class = "type-button-text-divs">
+                                                    <p class="type-button-texts">URL</p>
+                                                </div>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </header>
+                        <section id = "csv-input-section">
+                            <div class = "csv-input-divs opened" id = "file-div">
+                                <input type="file" id = "file-input" name = "file" accept=".csv" disabled/>
+                            </div>
+                            <div class = "csv-input-divs closed" id = "url-div">
+                                <div class = "csv-text-input-label-divs">
+                                    <label for = "url-input" class ="csv-labels" id = "url-input-label">URL:</label>
+                                </div>
+                                <div class = "csv-text-input-label-divs" for = "url-input">
+                                    <input type="url" name="url" class = "csv-text-inputs" id = "url-input" placeholder = "https://" disabled>
+                                </div>
+                            </div>
+                        </section>
+                        <section id = "csv-settings-section">
+                            <div id = "settings-area">
+                                <div class = "settings-divs">
+                                    <div class = "csv-settings-active-area">
+                                        <div class = "csv-settings-title-divs">
+                                            <span class = "csv-settings-titles">Limitar linhas:</span>
+                                        </div>
+                                        <div class = "active-button-divs">
+                                            <input type="checkbox" class = "active-buttons" id = "rows"/>
+                                            <span class="active-button-decorations"></span>
+                                        </div>
+                                    </div>
+                                    <section class="csv-settings-sections closed" id = "settings-section-rows">
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "settings-labels" for = "input-rows">Linhas:</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="number" class = "number-inputs" id = "input-rows" name = "rows" min="1" max="999" maxlength="3"/>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                                <div class = "settings-divs closed" id = "delimiter-div">
+                                    <div class = "csv-settings-title-divs">
+                                        <span class = "csv-settings-titles">Delimitador:</span>
+                                    </div>
+                                    <section class="csv-settings-sections">
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "settings-labels" for = "comma">,</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="radio" class = "csv-settings-inputs" id = "comma" name = "delimiter" value = "," checked/>
+                                                <span class = "csv-settings-input-decorations"></span>
+                                            </div>
+                                        </div>
+                                        <div class = "csv-settings-option-divs">
+                                            <label class = "settings-labels" for = "semicolon">;</label>
+                                            <div class = "csv-settings-input-divs">
+                                                <input type="radio" class = "csv-settings-inputs" id = "semicolon" name = "delimiter" value = ";"/>
+                                                <span class = "csv-settings-input-decorations"></span>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+                            </div>
+                        </section>
+                        <footer id = "csv-form-footer">
+                            <div id = "csv-submit-button-div">
+                                <button type="submit" class = "csv-form-buttons green" id = "csv-submit-button">
+                                    <div class = "csv-form-button-icon-divs">
+                                        <div class = "csv-form-button-icons" id = "submit-icon"></div>
+                                    </div>
+                                    <div class = "csv-form-button-span-divs">
+                                        <span class = "csv-form-button-spans">Enviar</span>
+                                    </div>
+                                </button>
+                            </div>
+                            <div id = "warning-div">
+                                <span id = "warning"></span>
+                            </div>
+                            <div id = "error-div">
+                                <span id = "error"></span>
+                            </div>
+                        </footer>
+                    </form>
+                </div>
+            </div>
+            <div class="csv-locations" id = "csv-results">
+                <div id = "csv-table-area">
+                    <table id = "csv-table">
+                        <tbody id = "csv-table-tbody">
+                            <tr class = "table-rows" id = "first-row">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <section id = "csv-results-button-section">
+                    <div id = "csv-results-button-area">
+                        <div class = "csv-result-button-divs">
+                            <button type="button" class = "csv-result-buttons" id = "move-results-home" onclick = "moveLocation({before: 'results', after: 'home'})">
+                                <div class="csv-result-button-icon-divs">
+                                    <div class = "csv-result-button-icons left blue"></div>
+                                </div>
+                                <div class="csv-result-button-text-divs">
+                                    <p class = "csv-result-button-texts">Voltar</p>
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </main>
+    <script type="text/javascript">
+        const background = document.querySelector("#worksheet-background");
+        const csvHome = document.querySelector("#csv-home");
+        const csvResults = document.querySelector("#csv-results");
+        let csvReceive = "{{csv|escapejs}}";
+        if(csvReceive.length !== 0) {
+            background.className = "results";
+            csvHome.classList.add("closed");
+            csvResults.classList.remove("closed");
+            let csvJson = JSON.parse(csvReceive);
+            let ths = Object.keys(csvJson[0]);
+            const tbody = document.querySelector("#csv-table-tbody");
+            const firstRow = document.querySelector("#first-row");
+            for(let i = 0; i <= ths.length - 1; i++) {
+                let th = document.createElement("th");
+                th.className = "table-headers";
+                th.innerHTML = ths[i];
+                firstRow.appendChild(th);
+            };
+            for(let j = 0; j <= csvJson.length - 1; j++) {
+                let tr = document.createElement("tr");
+                tr.className = "table-rows";
+                for(let k = 0; k <= ths.length - 1; k++) {
+                    let td = document.createElement("td");
+                    td.className = "table-datas";
+                    td.id = `${j}-${k}`;
+                    td.innerHTML = csvJson[j][ths[k]];
+                    tr.appendChild(td);
+                };
+                tbody.appendChild(tr);
+            };
+            console.log(csvJson);
+        } else {
+            csvHome.classList.remove("closed");
+            csvResults.classList.add("closed");
+        };
+    </script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtons.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtonRowHandler.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtonRowError.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/backgroundAnimation.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/backgroundCircles.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/delimiterDiv.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/errorAlert.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/errorHandler.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/extensionSelect.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/extensionSelectError.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/fileInputError.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/formSubmit.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/numberInputs.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/moveLocation.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/tableDataHover.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/typeButtons.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/warningAlert.js' %}"></script>
+    <script type = "text/javascript">
+        let errorReceived = "{{error|escapejs}}";
+        if(errorReceived.length !== 0) {
+            errorHandler({error: errorReceived});
+        }
+    </script>
+</body>
+</html>

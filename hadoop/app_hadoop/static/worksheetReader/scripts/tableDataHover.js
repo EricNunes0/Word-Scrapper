@@ -16,6 +16,11 @@ for(const td of tableDatas) {
                         data.classList.add("effect");
                     };
                 };
+                if(parseInt(dataColumn) > (parseInt(tdColumn) - limite)) {
+                    if(parseInt(dataColumn) < (parseInt(tdColumn) + limite)) {
+                        data.classList.add("effect");
+                    };
+                };
             };
         };
     };

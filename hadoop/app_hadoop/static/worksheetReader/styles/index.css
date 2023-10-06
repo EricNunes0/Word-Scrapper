@@ -1,5 +1,5 @@
 :root {
-    --csv-area-border: 2px solid #ada;
+    --csv-area-border: 2px solid #555;
     --csv-area-border-radius: 10px;
     --csv-area-color: #202024;
     --csv-form-width: 300px;
@@ -20,6 +20,12 @@
     --csv-results-buttons-color: #009ac0;
     --csv-text-inputs-color: #00c060;
     --csv-type-buttons-color: #00c060;
+    --error-color: #f02020;
+    --extension-select-color: #00c060;
+    --extension-select-width: 130px;
+    --extension-select-heigth: 40px;
+    --form-header-background-image-color-0: #00ff80;
+    --form-header-background-image-color-1: #1ea040;
 }
 
 * {
@@ -33,45 +39,59 @@ html, body {
 }
 
 /* Corpo da página */
-#csv-body {
+#worksheet-body {
     width: 100vw;
     height: 100vh;
 }
 
 /* Cenário da página */
-#csv-background {
-    pointer-events: none;
+#worksheet-background {
+    pointer-events: all;
     position: fixed;
     z-index: -1;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(180deg, rgb(20, 100, 20, 0.15), rgba(0, 0, 0, 1)), url("../images/background(0).png");
-    background-position: center;
-    background-size: cover;
     transition: all 0.3s;
 }
-#csv-background[class~="home"] {
+/*#worksheet-background[class~="home"] {
     filter: hue-rotate(0deg);
 }
-#csv-background[class~="results"] {
+#worksheet-background[class~="results"] {
     filter: hue-rotate(90deg);
+}*/
+
+/* Canvas do cenário */
+#worksheet-background-canvas {
+    pointer-events: all;
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    width: 100%;
+    height: 100%;
 }
 
-@keyframes BackgroundAnimation {
-
+/* Imagem do canvas do cenário */
+#worksheet-background-canvas-image {
+    position: absolute;
+    z-index: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(180deg, rgb(20, 100, 20, 0.15), rgba(0, 0, 0, 1)), url("../images/background(1).png");
+    background-size: cover;
 }
 
 /* Flocos do cenário */
-.csv-background-circles {
+.worksheet-background-circles {
     position: absolute;
+    z-index: 0;
     top: 100%;
     animation-name: BackgroundCircles;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
 }
-.csv-background-circles::after {
+.worksheet-background-circles::after {
     position: absolute;
     content: "";
     display: block;
@@ -130,23 +150,81 @@ html, body {
 /* Início */
 #csv-home {
     width: var(--csv-form-width);
-    height: var(--csv-form-height);
     border-radius: var(--csv-area-border-radius);
 }
 #csv-home[class~="closed"] {
     display: none;
 }
 
-/* Sessão de escolher tipo de envio */
-#csv-type-section {
+/* Header do formulário */
+#form-header {
+    position: relative;
     width: 100%;
     background-color: var(--csv-area-color);
-    padding: 10px 0;
     border-top: var(--csv-area-border);
     border-left: var(--csv-area-border);
     border-right: var(--csv-area-border);
     border-top-left-radius: var(--csv-area-border-radius);
     border-top-right-radius: var(--csv-area-border-radius);
+}
+
+/* Div das cofigurações do header do formulário */
+#form-header-div {
+    background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
+    border-top-left-radius: calc(var(--csv-area-border-radius) - 4px);
+    border-top-right-radius: calc(var(--csv-area-border-radius) - 4px);
+}
+
+/* Sessão da extensão do arquivo */
+#extension-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Div da seleção de extensão */
+#extension-select-div {
+    margin: 10px 0;
+}
+
+/* Seleção de extensão */
+#extension-select {
+    cursor: pointer;
+    width: var(--extension-select-width);
+    height: var(--extension-select-heigth);
+    background-color: var(--csv-area-color);
+    color: #fff;
+    font-size: 18px;
+    border: 2px solid var(--extension-select-color);
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s;
+}
+#extension-select:focus {
+    border: 2px solid #fff;
+}
+#extension-select[class~="error"] {
+    transform: scale(1.05);
+    border: 2px solid var(--error-color);
+    box-shadow: 0px 0px 10px var(--error-color);
+}
+
+option {
+    cursor: pointer;
+    width: 100%;
+    height: var(--extension-select-heigth);
+    text-align: center;
+    transition: all 0.3s;
+}
+option:hover {
+    background-color: var(--extension-select-color);
+}
+
+/* Sessão de escolher tipo de envio */
+#type-section {
+    width: 100%;
+    padding: 10px 0;
 }
 
 /* Área da sessão de escolher tipo de envio */
@@ -155,6 +233,16 @@ html, body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+}
+
+/* Divs dos botões de envio */
+.csv-type-button-divs {
+    outline: 2px solid #0c8e3b;
+    border-radius: 3px;
+    transition: all 0.3s;
+}
+.csv-type-button-divs:hover {
+    outline: 2px solid #0e9e43;
 }
 
 /* Botões dos tipo de envio */
@@ -218,7 +306,7 @@ input[type="file"] {
     transition: all 0.3s;
 }
 input[type="file"]::after {
-    content: "Arraste e solte o arquivo .csv\apara enviá-lo";
+    content: "Arraste e solte o arquivo\apara enviá-lo";
     width: 100%;
     display: flex;
     justify-content: center;
@@ -286,6 +374,29 @@ input[type="file"]::-webkit-file-upload-button {
     display: none;
 }
 
+/* Input de arquivo */
+#file-input {
+    transition: all 0.3s;
+}
+#file-input:disabled {
+    pointer-events: none;
+    filter: brightness(0.7) grayscale(1);
+}
+#file-input[class~="error"] {
+    border-color: var(--error-color);
+    filter: drop-shadow(0px 0px 3px var(--error-color));
+    transition: all 0.3s;
+}
+#file-input[class~="error"]::-webkit-file-upload-button {
+    background-color: var(--error-color);
+}
+
+/* Input de URL */
+#url-input:disabled {
+    pointer-events: none;
+    filter: brightness(0.7) grayscale(1);
+}
+
 /* Labels */
 .csv-labels {
     color: #fff;
@@ -332,8 +443,13 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 /* Área das configurações */
-#csv-settings-area {
-    padding: 10px 0;
+#settings-area {
+    padding-bottom: 10px;
+}
+
+/* Divs das configurações */
+.settings-divs[class~="closed"] {
+    display: none;
 }
 
 /* Divs dos títulos das configurações */
@@ -363,9 +479,9 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 /* Labels das opções de configurações */
-.csv-settings-labels {
+.settings-labels {
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
 }
 
 /* Divs das opções de configurações */
@@ -468,22 +584,28 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 }
 
 /* Inputs de número das configurações */
-.csv-number-inputs {
-    width: 50px;
-    height: 30px;
-    background-color: transparent;
+.number-inputs {
+    width: 40px;
+    height: 24px;
+    background-color: #1a1a20;
     color: #fff;
-    font-size: 18px;
+    font-size: 16px;
     border: unset;
     border-bottom: 1px solid #606060;
+    border-radius: 3px;
     outline: none;
     transition: all 0.3s;
 }
-.csv-number-inputs:hover {
+.number-inputs:hover {
     border-bottom: 1px solid #fff;
 }
-.csv-number-inputs:focus {
+.number-inputs:focus {
     border-bottom: 1px solid var(--csv-input-number-border-color);
+}
+.number-inputs[class~="error"] {
+    transform: scale(1.03);
+    color: var(--error-color);
+    border-bottom: 1px solid var(--error-color);
 }
 
 /* Footer do formulário */
@@ -547,6 +669,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 /* Div do aviso */
 #warning-div {
+    display: flex;
     margin-top: 5px;
     margin-bottom: 10px;
 }
@@ -554,19 +677,22 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 /* Aviso */
 #warning {
     color: #f0d020;
+    text-align: center;
     text-shadow: 0px 0px 3px #f0d020;
 }
 
 /* Div do erro */
 #error-div {
+    display: flex;
     margin-top: 5px;
     margin-bottom: 10px;
 }
 
 /* Aviso */
 #error {
-    color: #f02020;
-    text-shadow: 0px 0px 3px #f02020;
+    color: var(--error-color);
+    text-align: center;
+    text-shadow: 0px 0px 3px var(--error-color);
 }
 
 /* Div da tabela */
