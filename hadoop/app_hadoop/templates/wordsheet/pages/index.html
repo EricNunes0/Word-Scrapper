@@ -38,7 +38,7 @@
                                     </div>
                                 </section>
                                 <section id = "type-section">
-                                    <div id = "csv-type-area">
+                                    <div id = "type-area">
                                         <div class = "csv-type-button-divs">
                                             <button type="button" class = "type-buttons selected" id = "file-button" onclick="typeButtons('file')" disabled>
                                                 <div class = "type-button-icon-divs">
@@ -120,16 +120,28 @@
                                 </div>
                             </div>
                         </section>
-                        <footer id = "csv-form-footer">
-                            <div id = "csv-submit-button-div">
-                                <button type="submit" class = "csv-form-buttons green" id = "csv-submit-button">
-                                    <div class = "csv-form-button-icon-divs">
-                                        <div class = "csv-form-button-icons" id = "submit-icon"></div>
-                                    </div>
-                                    <div class = "csv-form-button-span-divs">
-                                        <span class = "csv-form-button-spans">Enviar</span>
-                                    </div>
-                                </button>
+                        <footer id = "form-footer">
+                            <div id = "form-footer-button-div">
+                                <div class = "form-button-divs">
+                                    <button type="submit" class = "form-buttons green" id = "csv-submit-button">
+                                        <div class = "csv-form-button-icon-divs">
+                                            <div class = "form-button-icons" id = "submit-icon"></div>
+                                        </div>
+                                        <div class = "csv-form-button-span-divs">
+                                            <span class = "csv-form-button-spans">Enviar</span>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class = "form-button-divs" id = "move-home-results-div">
+                                    <button type="button" class = "form-buttons green" id = "move-home-results" onclick = "moveLocation({before: 'home', after: 'results'})">
+                                        <div class = "csv-form-button-span-divs">
+                                            <span class = "csv-form-button-spans">Tabela</span>
+                                        </div>
+                                        <div class = "csv-form-button-icon-divs">
+                                            <div class = "form-button-icons right" id = "right-icon"></div>
+                                        </div>
+                                    </button>
+                                </div>
                             </div>
                             <div id = "warning-div">
                                 <span id = "warning"></span>
@@ -142,7 +154,10 @@
                 </div>
             </div>
             <div class="csv-locations" id = "csv-results">
-                <div id = "csv-table-area">
+                <div id = "filename-div">
+                    <h1 id = "filename"></h1>
+                </div>
+                <div id = "table-area">
                     <table id = "csv-table">
                         <tbody id = "csv-table-tbody">
                             <tr class = "table-rows" id = "first-row">
@@ -167,43 +182,6 @@
             </div>
         </div>
     </main>
-    <script type="text/javascript">
-        const background = document.querySelector("#worksheet-background");
-        const csvHome = document.querySelector("#csv-home");
-        const csvResults = document.querySelector("#csv-results");
-        let csvReceive = "{{csv|escapejs}}";
-        if(csvReceive.length !== 0) {
-            background.className = "results";
-            csvHome.classList.add("closed");
-            csvResults.classList.remove("closed");
-            let csvJson = JSON.parse(csvReceive);
-            let ths = Object.keys(csvJson[0]);
-            const tbody = document.querySelector("#csv-table-tbody");
-            const firstRow = document.querySelector("#first-row");
-            for(let i = 0; i <= ths.length - 1; i++) {
-                let th = document.createElement("th");
-                th.className = "table-headers";
-                th.innerHTML = ths[i];
-                firstRow.appendChild(th);
-            };
-            for(let j = 0; j <= csvJson.length - 1; j++) {
-                let tr = document.createElement("tr");
-                tr.className = "table-rows";
-                for(let k = 0; k <= ths.length - 1; k++) {
-                    let td = document.createElement("td");
-                    td.className = "table-datas";
-                    td.id = `${j}-${k}`;
-                    td.innerHTML = csvJson[j][ths[k]];
-                    tr.appendChild(td);
-                };
-                tbody.appendChild(tr);
-            };
-            console.log(csvJson);
-        } else {
-            csvHome.classList.remove("closed");
-            csvResults.classList.add("closed");
-        };
-    </script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtons.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtonRowHandler.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/activeButtonRowError.js' %}"></script>
@@ -218,14 +196,34 @@
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/formSubmit.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/numberInputs.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/moveLocation.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/tableAddRows.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/tableDataHover.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/typeButtons.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/warningAlert.js' %}"></script>
-    <script type = "text/javascript">
+    <script type="text/javascript">
+        const background = document.querySelector("#worksheet-background");
+        const csvHome = document.querySelector("#csv-home");
+        const csvResults = document.querySelector("#csv-results");
+        const fileName = document.querySelector("#filename");
+        const moveHomeResultsDiv = document.querySelector("#move-home-results-div");
+        let planilha = "{{planilha|escapejs}}";
+        let planilhaTitle = "{{title|escapejs}}";
         let errorReceived = "{{error|escapejs}}";
         if(errorReceived.length !== 0) {
             errorHandler({error: errorReceived});
         }
+        if(planilha.length !== 0) {
+            background.className = "results";
+            csvHome.classList.add("closed");
+            csvResults.classList.remove("closed");
+            fileName.innerHTML = planilhaTitle;
+            moveHomeResultsDiv.classList.remove("hidden");
+            tableAddRows(planilha);
+        } else {
+            csvHome.classList.remove("closed");
+            csvResults.classList.add("closed");
+            moveHomeResultsDiv.classList.add("hidden");
+        };
     </script>
 </body>
 </html>

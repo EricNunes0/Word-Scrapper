@@ -92,6 +92,8 @@ class wordsheetReader(TemplateView):
         checkExt = self.checkExtension
         if inputType == "file":
             file = request.FILES["file"]
+            title = file
+            print(title)
             if checkExt(extension, ".xls") or checkExt(extension, ".xlsx") or checkExt(extension, ".xlsm") or checkExt(extension, ".xlsb"):
                 read = BytesIO(file.read())
             elif checkExt(extension, ".csv"):
@@ -100,6 +102,7 @@ class wordsheetReader(TemplateView):
                 return self.returnRenderError(req = request, error = f"Este não é um formato válido!")
         elif inputType == "url":
             file = request.POST.get("url")
+            title = "URL"
             read = f"{file}"
         rows = request.POST.get("rows")
         if len(rows) == 0:
@@ -122,7 +125,7 @@ class wordsheetReader(TemplateView):
         #columns = data.columns.tolist()
         dataRows = data.head(n=rows)
         dataJsonStr = dataRows.to_json(orient='records')
-        return render(request, self.template_name, {'csv': dataJsonStr})
+        return render(request, self.template_name, {'planilha': dataJsonStr, 'title': title})
 
     def returnRenderError(self, req, error: str):
         return render(req, self.template_name, {"error": error})

@@ -1,5 +1,5 @@
 :root {
-    --csv-area-border: 2px solid #555;
+    --csv-area-border: 1px solid #555;
     --csv-area-border-radius: 10px;
     --csv-area-color: #202024;
     --csv-form-width: 300px;
@@ -55,12 +55,6 @@ html, body {
     height: 100%;
     transition: all 0.3s;
 }
-/*#worksheet-background[class~="home"] {
-    filter: hue-rotate(0deg);
-}
-#worksheet-background[class~="results"] {
-    filter: hue-rotate(90deg);
-}*/
 
 /* Canvas do cenário */
 #worksheet-background-canvas {
@@ -170,13 +164,15 @@ html, body {
 
 /* Div das cofigurações do header do formulário */
 #form-header-div {
-    background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
-    border-top-left-radius: calc(var(--csv-area-border-radius) - 4px);
-    border-top-right-radius: calc(var(--csv-area-border-radius) - 4px);
+    border-top-left-radius: calc(var(--csv-area-border-radius) - 5px);
+    border-top-right-radius: calc(var(--csv-area-border-radius) - 5px);
 }
 
 /* Sessão da extensão do arquivo */
 #extension-section {
+    background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
+    border-top-left-radius: 9px;
+    border-top-right-radius: 9px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -228,10 +224,10 @@ option:hover {
 }
 
 /* Área da sessão de escolher tipo de envio */
-#csv-type-area {
+#type-area {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -259,7 +255,7 @@ option:hover {
     color: #fff;
     border: unset;
     border-radius: 2px;
-    filter: grayscale(0.9);
+    filter: brightness(0.7) grayscale(1);
     transition: all 0.3s;
 }
 .type-buttons[class~="selected"] {
@@ -380,7 +376,7 @@ input[type="file"]::-webkit-file-upload-button {
 }
 #file-input:disabled {
     pointer-events: none;
-    filter: brightness(0.7) grayscale(1);
+    filter: brightness(0.5) grayscale(1);
 }
 #file-input[class~="error"] {
     border-color: var(--error-color);
@@ -394,7 +390,7 @@ input[type="file"]::-webkit-file-upload-button {
 /* Input de URL */
 #url-input:disabled {
     pointer-events: none;
-    filter: brightness(0.7) grayscale(1);
+    filter: brightness(0.5) grayscale(1);
 }
 
 /* Labels */
@@ -609,7 +605,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 }
 
 /* Footer do formulário */
-#csv-form-footer {
+#form-footer {
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -623,10 +619,24 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     border-bottom-right-radius: var(--csv-area-border-radius);
 }
 
+/* Alinhar botões do formulário */
+#form-footer-button-div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+/* Divs dos botões */
+.form-button-divs[class~="hidden"] {
+    display: none;
+}
+
 /* Botões do formulário */
-.csv-form-buttons {
+.form-buttons {
     cursor: pointer;
-    width: 150px;
+    width: 100px;
     height: 45px;
     display: flex;
     justify-content: center;
@@ -640,21 +650,21 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     font-size: 18px;
     transition: all 0.3s;
 }
-.csv-form-buttons:hover {
+.form-buttons:hover {
     transform: scale(1.1);
 }
-.csv-form-buttons[class~="green"] {
+.form-buttons[class~="green"] {
     color: var(--csv-form-buttons-color-green);
     border-color: var(--csv-form-buttons-color-green);
 }
-.csv-form-buttons[class~="green"]:hover {
+.form-buttons[class~="green"]:hover {
     color: #fff;
     background-color: var(--csv-form-buttons-color-green);
     filter: drop-shadow(0px 0px 5px var(--csv-form-buttons-color-green));
 }
 
 /* Ícones dos botões */
-.csv-form-button-icons {
+.form-button-icons {
     display: block;
     width: 18px;
     height: 18px;
@@ -665,6 +675,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 }
 #csv-submit-button:hover > .csv-form-button-icon-divs > #submit-icon {
     background-image: url("../svgs/submit(0).svg");
+}
+
+#right-icon {
+    background-image: url("../svgs/arrows/right(0).svg");
+}
+#move-home-results:hover > .csv-form-button-icon-divs > .right {
+    background-image: url("../svgs/arrows/right.svg");
 }
 
 /* Div do aviso */
@@ -705,7 +722,14 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     display: none;
 }
 
-#csv-table-area {
+/* Nome do arquivo */
+#filename {
+    color: #fff;
+    text-align: center;
+    text-shadow: 0px 0px 3px #009ac0;
+}
+
+#table-area {
     max-width: 700px;
     max-height: 400px;
     overflow: auto;
