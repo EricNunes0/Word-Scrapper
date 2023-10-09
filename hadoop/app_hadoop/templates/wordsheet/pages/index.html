@@ -7,6 +7,7 @@
     <title>Worksheet Reader</title>
     <link rel = "icon" href = "{% static 'worksheetReader/images/logo(0).png' %}">
     <link rel = "stylesheet" href = "{% static 'worksheetReader/styles/index.css' %}"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 </head>
 <body id = "worksheet-body">
     <div class="home" id = "worksheet-background">
@@ -21,6 +22,14 @@
                     <form id = "csv-form" action = "/worksheet-reader/" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" id = "type-hidden" name = "type" value = "file">
+                        <article id = "form-article">
+                            <div id = "form-logo-div">
+                                <img src = "{% static 'worksheetReader/images/logo(0).png' %}" id = "form-logo"></img>
+                            </div>
+                            <div id = "form-title-div">
+                                <h1 id = "form-title">Worksheet Reader</h1>
+                            </div>
+                        </article>
                         <header id = "form-header">
                             <div id = "form-header-div">
                                 <section id = "extension-section">

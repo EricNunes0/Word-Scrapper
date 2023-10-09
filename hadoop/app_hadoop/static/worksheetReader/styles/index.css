@@ -1,6 +1,6 @@
 :root {
-    --csv-area-border: 1px solid #555;
-    --csv-area-border-radius: 10px;
+    --csv-area-border: 2px dashed #555;
+    --csv-area-border-radius: 5px;
     --csv-area-color: #202024;
     --csv-form-width: 300px;
     --csv-form-height: 400px;
@@ -150,16 +150,60 @@ html, body {
     display: none;
 }
 
-/* Header do formulário */
-#form-header {
+/* Formulário */
+#csv-form {
+    border-radius: var(--csv-area-border-radius);
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Div do título e ícone do formulário */
+#form-article {
     position: relative;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: var(--csv-area-color);
     border-top: var(--csv-area-border);
     border-left: var(--csv-area-border);
     border-right: var(--csv-area-border);
     border-top-left-radius: var(--csv-area-border-radius);
     border-top-right-radius: var(--csv-area-border-radius);
+    padding: 15px 0;
+}
+
+#form-logo-div {
+    position: absolute;
+    top: calc(-25px - 15px);
+}
+
+/* Logo do formulário */
+#form-logo {
+    width: 70px;
+    height: 70px;
+    background-color: var(--csv-area-color);
+    background-image: linear-gradient(180deg, var(--form-header-background-image-color-0), var(--form-header-background-image-color-1));
+    border: 2px solid #555;
+    border-radius: 50%;
+    box-shadow: 0px -2px 10px rgba(255, 255, 255, 0.3);
+}
+
+/* Título do formulário */
+#form-title {
+    color: #fff;
+    font-size: 30px;
+    margin: 0;
+    text-align: center;
+}
+
+/* Header do formulário */
+#form-header {
+    position: relative;
+    width: 100%;
+    background-color: var(--csv-area-color);
+    border-left: var(--csv-area-border);
+    border-right: var(--csv-area-border);
 }
 
 /* Div das cofigurações do header do formulário */
@@ -171,6 +215,9 @@ html, body {
 /* Sessão da extensão do arquivo */
 #extension-section {
     background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
+    background-size: 50% 100%;
+    background-repeat: no-repeat;
+    background-position: 50%;
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     width: 100%;
@@ -233,7 +280,7 @@ option:hover {
 
 /* Divs dos botões de envio */
 .csv-type-button-divs {
-    outline: 2px solid #0c8e3b;
+    outline: 2px solid #444;
     border-radius: 3px;
     transition: all 0.3s;
 }
@@ -279,6 +326,7 @@ option:hover {
 /* Textos dos botões de escolher tipo */
 .type-button-texts {
     font-size: 18px;
+    margin: auto;
 }
 
 /* Input file */
