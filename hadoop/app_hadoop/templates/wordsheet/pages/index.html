@@ -74,7 +74,10 @@
                         </header>
                         <section id = "csv-input-section">
                             <div class = "csv-input-divs opened" id = "file-div">
-                                <input type="file" id = "file-input" name = "file" accept=".csv" disabled/>
+                                <div id = "input-filename-div">
+                                    <p id = "input-filename">Nenhum arquivo selecionado!</p>
+                                </div>
+                                <input type="file" id = "file-input" name = "file" accept=".xls" disabled/>
                             </div>
                             <div class = "csv-input-divs closed" id = "url-div">
                                 <div class = "csv-text-input-label-divs">
@@ -201,6 +204,7 @@
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/errorHandler.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/extensionSelect.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/extensionSelectError.js' %}"></script>
+    <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/fileChange.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/fileInputError.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/formSubmit.js' %}"></script>
     <script type = "text/javascript" src = "{% static 'worksheetReader/scripts/numberInputs.js' %}"></script>

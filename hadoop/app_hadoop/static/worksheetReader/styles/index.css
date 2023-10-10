@@ -38,6 +38,14 @@ html, body {
     overflow: hidden;
 }
 
+img, svg {
+    -webkit-user-drag: none;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+}
+
 /* Corpo da página */
 #worksheet-body {
     width: 100vw;
@@ -174,25 +182,27 @@ html, body {
 }
 
 #form-logo-div {
-    position: absolute;
-    top: calc(-25px - 15px);
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* Logo do formulário */
 #form-logo {
     width: 70px;
     height: 70px;
-    background-color: var(--csv-area-color);
-    background-image: linear-gradient(180deg, var(--form-header-background-image-color-0), var(--form-header-background-image-color-1));
-    border: 2px solid #555;
-    border-radius: 50%;
-    box-shadow: 0px -2px 10px rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.3);
+    border: 2px double rgba(150, 150, 150, 1);
+    border-radius: 15px;
+    box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.3);
 }
 
 /* Título do formulário */
 #form-title {
     color: #fff;
     font-size: 30px;
+    font-weight: 100;
     margin: 0;
     text-align: center;
 }
@@ -214,10 +224,10 @@ html, body {
 
 /* Sessão da extensão do arquivo */
 #extension-section {
-    background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
+    /*background: linear-gradient(180deg, var(--form-header-background-image-color-0) 0%, var(--form-header-background-image-color-1) 100%);
     background-size: 50% 100%;
     background-repeat: no-repeat;
-    background-position: 50%;
+    background-position: 50%;*/
     border-top-left-radius: 9px;
     border-top-right-radius: 9px;
     width: 100%;
@@ -346,7 +356,9 @@ input[type="file"] {
     border-style: dashed;
     border-width: 2px;
     border-radius: 5px;
+    font-size: 0px;
     text-align: center;
+    margin: auto;
     transition: all 0.3s;
 }
 input[type="file"]::after {
@@ -356,11 +368,13 @@ input[type="file"]::after {
     justify-content: center;
     align-items: center;
     color: #fff;
-    font-size: 16px;
+    font-size: 18px;
+    padding: 15px 0;
     text-align: center;
     transition: all 0.3s;
 }
 input[type="file"]:hover {
+    color: var(--csv-form-buttons-color-green);
     border-color: var(--csv-form-buttons-color-green);
     filter: drop-shadow(0px 0px 3px var(--csv-form-buttons-color-green));
 }
@@ -370,7 +384,7 @@ input[type="file"]:hover::after {
 input[type="file"]::-webkit-file-upload-button {
     cursor: pointer;
     position: absolute;
-    top: 70px;
+    top: 85px;
     left: calc(50% - calc(var(--csv-form-send-button-width) / 2));
     width: var(--csv-form-send-button-width);
     height: var(--csv-form-send-button-height);
@@ -415,6 +429,26 @@ input[type="file"]::-webkit-file-upload-button {
     transform: rotate3d(0, 1, 0, 90deg);
 }
 .csv-input-divs[class~="closed"] {
+    display: none;
+}
+
+/* Nome do input do arquivo */
+#input-filename-div {
+    width: 100%;
+    position: absolute;
+    top: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Nome do input do arquivo */
+#input-filename {
+    color: var(--extension-select-color);
+    margin: 0;
+}
+
+#input-filename[class~="hidden"] {
     display: none;
 }
 
@@ -788,7 +822,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 #csv-table {
     max-width: 700px;
     max-height: 400px;
-    background-image: linear-gradient(105deg, #41b6c5, #047abe);
+    background-image: linear-gradient(105deg, #fff, #ddd);
     background-size: 100% 100%;
     border-radius: 3px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
@@ -800,7 +834,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
 .table-headers, .table-datas {
     cursor: pointer;
-    color: #fff;
+    color: #000;
     border-width: 0;
     padding: 10px 15px;
     transition: all 0.2s;
@@ -871,4 +905,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 }
 .csv-result-buttons:hover > .csv-result-button-icon-divs > .csv-result-button-icons[class~="left"][class~="blue"] {
     background-image: url("../svgs/arrows/left.svg");
+}
+
+/* Textos dos botões dos resultados */
+.csv-result-button-texts {
+    margin: 0;
 }

@@ -1,8 +1,8 @@
 const extensionSelect = document.querySelector("#extension-select");
-const fileInput = document.querySelector("#file-input");
-const urlInput = document.querySelector("#url-input");
 
 extensionSelect.addEventListener("change", () => {
+    const fileInput = document.querySelector("#file-input");
+    const urlInput = document.querySelector("#url-input");
     fileInput.value = "";
     urlInput.value = "";
     if(extensionSelect.value.length === 0) {

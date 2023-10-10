@@ -8,7 +8,7 @@ from .functions.main import WordAmount
 from .functions.music import MusicLyrics
 import json
 import pandas
-import urllib3
+import requests
 from csv import writer, reader, QUOTE_NONNUMERIC
 
 def index(request):
@@ -103,7 +103,13 @@ class wordsheetReader(TemplateView):
         elif inputType == "url":
             file = request.POST.get("url")
             title = "URL"
-            read = f"{file}"
+            response = requests.get(file)
+            if checkExt(extension, ".xls") or checkExt(extension, ".xlsx") or checkExt(extension, ".xlsm") or checkExt(extension, ".xlsb"):
+                read = BytesIO(response.content)
+            elif checkExt(extension, ".csv"):
+                read = StringIO(response.content.decode('latin-1'))
+            else:
+                return self.returnRenderError(req = request, error = f"Este não é um formato válido!")
         rows = request.POST.get("rows")
         if len(rows) == 0:
             rows = 999
