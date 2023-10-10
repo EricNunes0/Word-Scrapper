@@ -103,7 +103,12 @@ class wordsheetReader(TemplateView):
         elif inputType == "url":
             file = request.POST.get("url")
             title = "URL"
-            response = requests.get(file)
+            try:
+                response = requests.get(file)
+            except Exception as e:
+                print(e)
+                return self.returnRenderError(req = request, error = f"Não foi possível encontrar um arquivo {extension} nesta URL!")
+            
             if checkExt(extension, ".xls") or checkExt(extension, ".xlsx") or checkExt(extension, ".xlsm") or checkExt(extension, ".xlsb"):
                 read = BytesIO(response.content)
             elif checkExt(extension, ".csv"):
